@@ -1,25 +1,29 @@
 {
   "id": "/",
   "scope": "/",
-  "name": "PWA Starter",
   "display": "standalone",
   "start_url": "/",
-  "short_name": "starter",
-  "theme_color": "#E1477E",
+
+  "short_name": "TU ON",
   "description": "This is a PWA Starter app",
+
+  "theme_color": "#FFFFFF",
   "orientation": "any",
-  "background_color": "#E1477E",
   "related_applications": [],
   "prefer_related_applications": false,
   "display_override": ["window-controls-overlay"],
   "launch_handler": {
     "client_mode": "focus-existing"
   },
+
+  "name": "TU ON",
+  "background_color": "#FFD5E3",
   "icons": [
     {
       "src": "assets/icons/512-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "assets/icons/192-192.png",
@@ -37,6 +41,7 @@
       "type": "image/png"
     }
   ],
+
   "screenshots": [
     {
       "src": "assets/screenshots/screen.png",

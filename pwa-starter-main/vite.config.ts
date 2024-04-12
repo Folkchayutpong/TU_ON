@@ -28,5 +28,14 @@ export default defineConfig({
         enabled: true
       }
     })
-  ]
+  ],
+  server: {
+    port: 8000,
+    strictPort: true,
+    open: true,
+    hmr: {
+      overlay: true
+    },
+    host: '0.0.0.0'
+  }
 })

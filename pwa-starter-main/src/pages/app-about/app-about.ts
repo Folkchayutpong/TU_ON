@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { property, customElement } from 'lit/decorators.js';
 
 // You can also import styles from another file
 // if you prefer to keep your CSS seperate from your component
@@ -11,10 +11,18 @@ import '@shoelace-style/shoelace/dist/components/card/card.js';
 
 @customElement('app-about')
 export class AppAbout extends LitElement {
+  @property() activeTab: string = 'profile';
+
   static styles = [
     sharedStyles,
     styles
   ]
+
+  async firstUpdated() {
+    // this method is a lifecycle even in lit
+    // for more info check out the lit docs https://lit.dev/docs/components/lifecycle/
+    this.activeTab = 'profile';
+  }
 
   render() {
     return html`
@@ -36,6 +44,8 @@ export class AppAbout extends LitElement {
               docs</a> to learn more about the advanced features that you can use in your PWA</p>
         </sl-card>
       </main>
+
+      <bottom-navigation activeTab="${this.activeTab}"></bottom-navigation>
     `;
   }
 }

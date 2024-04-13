@@ -1,13 +1,14 @@
 // src/components/bottom-navigation.ts
 
 import { LitElement, css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { property, customElement } from 'lit/decorators.js';
 import { resolveRouterPath } from '../router';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 
 @customElement('bottom-navigation')
 export class BottomNavigation extends LitElement {
+  @property({ type: String }) activeTab: string = 'home';
   static styles = css`
     nav {
       display: flex;
@@ -26,12 +27,18 @@ export class BottomNavigation extends LitElement {
 
     nav a {
       text-decoration: none;
+      color: white;
       text-align: center;
       font-size: 12px;
-      color: white;
       width: 48px;
       height: 48px;
       margin: auto 0;
+      cursor: alias;
+      opacity: 0.5;
+    }
+
+    nav a.active {
+        opacity: 1;
     }
 
     @media(prefers-color-scheme: light) {
@@ -40,27 +47,30 @@ export class BottomNavigation extends LitElement {
         background-color: var(--nav-light-color);
       }
 
-      nav a {
-        color: initial;
-      }
     }
   `;
+
+  updated(changedProperties: Map<string, any>) {
+    if (changedProperties.has('activeTab')) {
+      this.requestUpdate(); // Update the component to re-render when activeTab changes
+    }
+  }
 
 // <a href="${resolveRouterPath('#/app-home')}">Home</a>
   render() {
     return html`
       <nav>
-        <a href="#HOME">
-            <img src="/assets/fa/Home.svg" alt="Home">
+        <a href="${resolveRouterPath()}" class="${this.activeTab === 'home' ? 'active' : ''}">
+            <img src="/assets/fa/Home.svg" alt="Home" id="btn-home">
         </a>
-        <a href="#SLIDE">
-            <img src="/assets/fa/Slide.svg" alt="Slide">
+        <a href="#SLIDE" class="${this.activeTab === 'slide' ? 'active' : ''}>
+            <img src="/assets/fa/Slide.svg" alt="Slide" id="btn-slide">
         </a>
-        <a href="#TUTOR">
-            <img src="/assets/fa/Tutor.svg" alt="Tutor">
+        <a href="#TUTOR" class="${this.activeTab === 'tutor' ? 'active' : ''}>
+            <img src="/assets/fa/Tutor.svg" alt="Tutor" id="btn-tutor">
         </a>
-        <a href="#PROFILE">
-            <img src="/assets/fa/User.svg" alt="Profile">
+        <a href="${resolveRouterPath('about')}" class="${this.activeTab === 'profile' ? 'active' : ''}">
+            <img src="/assets/fa/User.svg" alt="Profile" id="btn-profile">
         </a>
       </nav>
     `;

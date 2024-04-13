@@ -13,6 +13,7 @@ export class AppHome extends LitElement {
   // For more information on using properties and state in lit
   // check out this link https://lit.dev/docs/components/properties/
   @property() message = 'Welcome!';
+  @property() activeTab: string = 'home';
 
   static styles = [
     styles,
@@ -58,7 +59,7 @@ export class AppHome extends LitElement {
   async firstUpdated() {
     // this method is a lifecycle even in lit
     // for more info check out the lit docs https://lit.dev/docs/components/lifecycle/
-    console.log('This is your home page');
+    this.activeTab = 'home';
   }
 
   share() {
@@ -132,7 +133,7 @@ export class AppHome extends LitElement {
       </main>
       -->
 
-      <bottom-navigation></bottom-navigation>
+      <bottom-navigation activeTab="${this.activeTab}"></bottom-navigation>
     `;
   }
 }

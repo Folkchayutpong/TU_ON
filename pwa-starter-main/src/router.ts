@@ -46,3 +46,11 @@ export const router = new Router({
 
     return resolvedPath;
   }
+
+  export function getActiveTab(currentPath: string): string {
+    if (currentPath.startsWith('about')) {
+      return 'profile';
+    }
+    // Default to 'home' for other paths
+    return 'home';
+  }

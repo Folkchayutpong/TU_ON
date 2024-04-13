@@ -75,6 +75,8 @@ export class AppHome extends LitElement {
     return html`
       <app-header></app-header>
 
+      <!-- Main content example -->
+      <!--
       <main>
         <div id="welcomeBar">
           <sl-card id="welcomeCard">
@@ -128,6 +130,9 @@ export class AppHome extends LitElement {
           <sl-button href="${resolveRouterPath('about')}" variant="primary">Navigate to About</sl-button>
         </div>
       </main>
+      -->
+
+      <bottom-navigation></bottom-navigation>
     `;
   }
 }

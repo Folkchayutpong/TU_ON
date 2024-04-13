@@ -2,9 +2,12 @@ import { LitElement, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 import './pages/app-home';
-import './components/header';
 import './styles/global.css';
 import { router } from './router';
+
+// components
+import './components/header';
+import './components/bottom-navigation';
 
 @customElement('app-index')
 export class AppIndex extends LitElement {

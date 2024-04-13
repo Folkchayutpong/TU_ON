@@ -21,3 +21,8 @@ Preview the app locally:
 ```bash
 npm start
 ```
+
+Add the PWA to your home screen:
+- Open the browser menu
+- Open the https://your-ipaddress:8000
+- Click "Add to Home Screen"

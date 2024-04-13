@@ -45,6 +45,24 @@ export class AppHeader extends LitElement {
       gap: 8px;
     }
 
+    .bgOval {
+      position: relative;
+      background: var(--header-light-bg-color);
+      box-shadow: 0px 0px 4px 2px rgb(0 0 0 / 25%);
+      border-radius: 50%;
+      width: 540px;
+      height: 209px;
+      left: -50%;
+      z-index: -1;
+    }
+
+    .bgOval-50 { position: absolute; left: 50%; top: -72px; }
+
+    @media(orientation: landscape) {
+      .bgOval {
+        display: none;
+      }
+
     @media(prefers-color-scheme: light) {
       header {
         color: black;
@@ -59,7 +77,11 @@ export class AppHeader extends LitElement {
   render() {
     return html`
       <header>
-
+        <div class="bgOval-50">
+          <div class="bgOval"></div>
+        </div>
+        <!-- example code -->
+        <!--
         <div id="back-button-block">
           ${this.enableBack ? html`<sl-button size="small" href="${resolveRouterPath()}">
             Back
@@ -67,6 +89,7 @@ export class AppHeader extends LitElement {
 
           <h1>${this.title}</h1>
         </div>
+        -->
       </header>
     `;
   }

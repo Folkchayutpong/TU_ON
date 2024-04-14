@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: Padding(
           padding: EdgeInsets.all(60.0),
-          child: MsgBox(),
+          child: MyHomePage(),
         ),
       ),
     );

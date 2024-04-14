@@ -50,13 +50,13 @@ export class AppHeader extends LitElement {
       background: var(--header-light-bg-color);
       box-shadow: 0px 0px 4px 2px rgb(0 0 0 / 25%);
       border-radius: 50%;
-      width: 540px;
-      height: 209px;
+      width: 150vw;
+      height: 25vh;
       left: -50%;
       z-index: -1;
     }
 
-    .bgOval-50 { position: absolute; left: 50%; top: -72px; }
+    .bgOval-50 { position: absolute; left: 50%; top: -8vh; }
 
     @media(orientation: landscape) {
       .bgOval {

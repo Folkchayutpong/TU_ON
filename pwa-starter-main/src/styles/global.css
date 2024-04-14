@@ -35,3 +35,10 @@ html, body {
     color: black;
   }
 }
+
+@media(orientation: landscape) {
+  html,
+  body {
+    display: none;
+  }
+}

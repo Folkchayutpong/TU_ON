@@ -24,12 +24,12 @@ export const router = new Router({
         render: () => html`<app-home></app-home>`
       },
       {
-        path: resolveRouterPath('about'),
-        title: 'About',
+        path: resolveRouterPath('profile'),
+        title: 'Profile',
         plugins: [
-          lazy(() => import('./pages/app-about/app-about.js')),
+          lazy(() => import('./pages/app-profile/app-profile.js')),
         ],
-        render: () => html`<app-about></app-about>`
+        render: () => html`<app-profile></app-profile>`
       }
     ]
   });
@@ -48,7 +48,7 @@ export const router = new Router({
   }
 
   export function getActiveTab(currentPath: string): string {
-    if (currentPath.startsWith('about')) {
+    if (currentPath.startsWith('profile')) {
       return 'profile';
     }
     // Default to 'home' for other paths

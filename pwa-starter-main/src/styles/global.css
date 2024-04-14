@@ -6,7 +6,9 @@
 :root {
   --font-family: sans-serif;
   --nav-light-color: #C2E2F5;
+  --nav-dark-color: #000000;
   --header-light-bg-color: #FFD5E3;
+  --header-dark-bg-color: #000000;
 }
 
 html, body {
@@ -21,7 +23,8 @@ html, body {
 
   html,
   body {
-    background-color: #181818;
+    background-color: #584859;
+    background-image: linear-gradient(#000000 0%, #584859 100%);
     color: white;
   }
 }

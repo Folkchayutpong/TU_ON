@@ -1,6 +1,7 @@
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-import { resolveRouterPath } from '../router';
+import { getCookie, deleteCookie, url } from '../utils/cookie-utils';
+// import { resolveRouterPath } from '../router';
 
 import '@shoelace-style/shoelace/dist/components/card/card.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
@@ -12,7 +13,6 @@ export class AppHome extends LitElement {
 
   // For more information on using properties and state in lit
   // check out this link https://lit.dev/docs/components/properties/
-  @property() message = 'Welcome!';
   @property() activeTab: string = 'home';
 
   static styles = [
@@ -59,16 +59,23 @@ export class AppHome extends LitElement {
   async firstUpdated() {
     // this method is a lifecycle even in lit
     // for more info check out the lit docs https://lit.dev/docs/components/lifecycle/
-    this.activeTab = 'home';
-  }
 
-  share() {
-    if ((navigator as any).share) {
-      (navigator as any).share({
-        title: 'PWABuilder pwa-starter',
-        text: 'Check out the PWABuilder pwa-starter!',
-        url: 'https://github.com/pwa-builder/pwa-starter',
+    // Check if user is logged in
+    const userCookie = getCookie('user');
+    if (userCookie) {
+      // Edit the URL to match your API endpoint
+      fetch(`${url}/users?id=${JSON.parse(userCookie).id}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.length > 0) {
+          this.activeTab = 'home';
+        } else {
+          deleteCookie('user');
+          window.location.href = '/';
+        }
       });
+    } else {
+      window.location.href = '/';
     }
   }
 
@@ -76,62 +83,10 @@ export class AppHome extends LitElement {
     return html`
       <app-header></app-header>
 
-      <!-- Main content example -->
-      <!--
+      <!-- Main content -->
       <main>
-        <div id="welcomeBar">
-          <sl-card id="welcomeCard">
-            <div slot="header">
-              <h2>${this.message}</h2>
-            </div>
 
-            <p>
-              For more information on the PWABuilder pwa-starter, check out the
-              <a href="https://docs.pwabuilder.com/#/starter/quick-start">
-                documentation</a>.
-            </p>
-
-            <p id="mainInfo">
-              Welcome to the
-              <a href="https://pwabuilder.com">PWABuilder</a>
-              pwa-starter! Be sure to head back to
-              <a href="https://pwabuilder.com">PWABuilder</a>
-              when you are ready to ship this PWA to the Microsoft Store, Google Play
-              and the Apple App Store!
-            </p>
-
-            ${'share' in navigator
-              ? html`<sl-button slot="footer" variant="primary" @click="${this.share}">Share this Starter!</sl-button>`
-              : null}
-          </sl-card>
-
-          <sl-card id="infoCard">
-            <h2>Technology Used</h2>
-
-            <ul>
-              <li>
-                <a href="https://www.typescriptlang.org/">TypeScript</a>
-              </li>
-
-              <li>
-                <a href="https://lit.dev">lit</a>
-              </li>
-
-              <li>
-                <a href="https://shoelace.style/">Shoelace</a>
-              </li>
-
-              <li>
-                <a href="https://github.com/thepassle/app-tools/blob/master/router/README.md"
-                  >App Tools Router</a>
-              </li>
-            </ul>
-          </sl-card>
-
-          <sl-button href="${resolveRouterPath('profile')}" variant="primary">Navigate to About</sl-button>
-        </div>
       </main>
-      -->
 
       <bottom-navigation activeTab="${this.activeTab}"></bottom-navigation>
     `;

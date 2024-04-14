@@ -8,6 +8,8 @@ import { router } from './router';
 // components
 import './components/header';
 import './components/bottom-navigation';
+import './components/login-component';
+import './components/signup-component';
 
 @customElement('app-index')
 export class AppIndex extends LitElement {

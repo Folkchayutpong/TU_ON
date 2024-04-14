@@ -20,6 +20,22 @@ export const router = new Router({
     routes: [
       {
         path: resolveRouterPath(),
+        title: 'Login',
+        plugins: [
+          lazy(() => import('./pages/app-login/app-login.js')),
+        ],
+        render: () => html`<app-login></app-login>`
+      },
+      {
+        path: resolveRouterPath('signup'),
+        title: 'Signup',
+        plugins: [
+          lazy(() => import('./pages/app-login/app-signup.js')),
+        ],
+        render: () => html`<app-signup></app-signup>`
+      },
+      {
+        path: resolveRouterPath('home'),
         title: 'Home',
         render: () => html`<app-home></app-home>`
       },

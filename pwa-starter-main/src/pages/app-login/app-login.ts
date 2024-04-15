@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 import { getCookie } from '../../utils/cookie-utils';
 import { resolveRouterPath } from '../../router';
@@ -16,7 +16,17 @@ export class AppLogin extends LitElement {
   @property() activeTab: string = 'profile';
 
   static styles = [
-    sharedStyles
+    sharedStyles,
+    css`
+      sl-card {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 16px;
+      }
+    `
   ]
 
   async firstUpdated() {
@@ -37,6 +47,7 @@ export class AppLogin extends LitElement {
         <sl-card>
           <login-component></login-component>
         </sl-card>
+        <br>
         <sl-card>
             <a href="${resolveRouterPath('signup')}">Sign Up</a>
         </sl-card>

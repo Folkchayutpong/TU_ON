@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 
 // You can also import styles from another file
@@ -14,7 +14,17 @@ export class AppSignup extends LitElement {
   @property() activeTab: string = 'profile';
 
   static styles = [
-    sharedStyles
+    sharedStyles,
+    css`
+      sl-card {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 16px;
+      }
+    `
   ]
 
   async firstUpdated() {
@@ -25,7 +35,7 @@ export class AppSignup extends LitElement {
   render() {
     return html`
       <main>
-        <h1>Sign</h1>
+        <h1>Sign Up</h1>
         <sl-card>
           <signup-component></signup-component>
         </sl-card>

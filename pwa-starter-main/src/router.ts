@@ -20,6 +20,14 @@ export const router = new Router({
     routes: [
       {
         path: resolveRouterPath(),
+        title: 'loading...',
+        plugins: [
+          lazy(() => import('./pages/load.js')),
+        ],
+        render: () => html`<app-load></app-load>`
+      },
+      {
+        path: resolveRouterPath('login'),
         title: 'Login',
         plugins: [
           lazy(() => import('./pages/app-login/app-login.js')),

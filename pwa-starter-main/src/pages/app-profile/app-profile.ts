@@ -1,5 +1,6 @@
 import { LitElement, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
+import { getCookie, deleteCookie, url } from '../../utils/cookie-utils';
 
 // You can also import styles from another file
 // if you prefer to keep your CSS seperate from your component
@@ -21,7 +22,22 @@ export class AppAbout extends LitElement {
   async firstUpdated() {
     // this method is a lifecycle even in lit
     // for more info check out the lit docs https://lit.dev/docs/components/lifecycle/
-    this.activeTab = 'profile';
+    const userCookie = getCookie('user');
+    if (userCookie) {
+      // Edit the URL to match your API endpoint
+      fetch(`${url}/users?id=${JSON.parse(userCookie).id}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.length > 0) {
+          this.activeTab = 'profile';
+        } else {
+          deleteCookie('user');
+          window.location.href = '/';
+        }
+      });
+    } else {
+      window.location.href = '/';
+    }
   }
 
   render() {
@@ -44,6 +60,8 @@ export class AppAbout extends LitElement {
               docs</a> to learn more about the advanced features that you can use in your PWA</p>
         </sl-card>
       </main>
+
+      <logout-component></logout-component>
 
       <bottom-navigation activeTab="${this.activeTab}"></bottom-navigation>
     `;

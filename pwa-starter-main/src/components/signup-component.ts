@@ -34,12 +34,13 @@ export class SignupComponent extends LitElement {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.id) {
+      console.log(data);
+      if (data.id) {
         setCookie('user', JSON.stringify(data), 1);  // Set user data in cookie for 1 day
         window.location.href = '/';
-        } else {
+      } else {
         alert('Signup failed. Please try again.');
-        }
+      }
     })
     .catch(error => {
         console.error('Error:', error);

@@ -26,7 +26,7 @@ Start server db.json:
 ```bash
 json-server --watch db.json --port 3001
 ```
-
+Open the browser on **mobile**
 Add the PWA to your home screen:
 - Open the browser menu
 - Open the https://your-ipaddress:8000

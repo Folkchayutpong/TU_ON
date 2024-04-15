@@ -11,6 +11,8 @@ class FileBox extends StatefulWidget {
 class _FileBoxState extends State<FileBox> {
   PlatformFile? pickedFile;
   String? aText;
+  Color tapColor1 = Colors.white;
+  Color tapColor2 = Colors.white;
 
   Future<void> selectFile() async {
     final result = await FilePicker.platform.pickFiles();
@@ -30,7 +32,7 @@ class _FileBoxState extends State<FileBox> {
       child: Container(
         decoration: BoxDecoration(
             color: Colors.red, borderRadius: BorderRadius.circular(30.0)),
-        height: 700,
+        height: 470,
         width: 450,
         child: Column(
           children: [
@@ -41,7 +43,7 @@ class _FileBoxState extends State<FileBox> {
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 15.0, right: 15),
+              padding: EdgeInsets.only(left: 25.0, right: 25),
               child: Column(
                 children: [
                   const Align(
@@ -76,7 +78,7 @@ class _FileBoxState extends State<FileBox> {
                       fillColor: Colors.grey[200],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
                   Align(
@@ -93,7 +95,7 @@ class _FileBoxState extends State<FileBox> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(aText ?? 'file.pdf',
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 13)),
                             Spacer(),
                             SizedBox(
@@ -103,7 +105,7 @@ class _FileBoxState extends State<FileBox> {
                                 onPressed: () async {
                                   await selectFile();
                                 },
-                                child: Text('Select file',
+                                child: const Text('Select file',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
@@ -114,15 +116,72 @@ class _FileBoxState extends State<FileBox> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
                   Row(
                     children: [
-                      Text("ประเภท",
+                      Text("ประเภท :",
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16))
+                              fontWeight: FontWeight.bold, fontSize: 16)),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text("Mid"),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      //ปุ่มกด mid
+                      Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: tapColor1),
+                        height: 10,
+                        width: 10,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              tapColor1 = tapColor1 == Colors.white
+                                  ? Colors.black
+                                  : Colors.white;
+                            });
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Text("Final"),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      //ปุ่มกด final
+                      Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: tapColor2),
+                        height: 10,
+                        width: 10,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              tapColor2 = tapColor2 == Colors.white
+                                  ? Colors.black
+                                  : Colors.white;
+                            });
+                          },
+                        ),
+                      )
                     ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: FloatingActionButton(
+                        child: const Text("POST"),
+                        backgroundColor: Colors.grey,
+                        onPressed: () {},
+                      ),
+                    ),
                   )
                 ],
               ),

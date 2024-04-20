@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
-import { property, customElement } from 'lit/decorators.js';
-import { getCookie} from '../utils/cookie-utils';
+import { customElement } from 'lit/decorators.js';
+// import { getCookie} from '../utils/cookie-utils';
 // import { resolveRouterPath } from '../router';
 
 import { styles } from '../styles/shared-styles';
@@ -10,7 +10,6 @@ export class AppLoad extends LitElement {
 
   // For more information on using properties and state in lit
   // check out this link https://lit.dev/docs/components/properties/
-  @property() activeTab: string = 'home';
 
   static styles = [
     styles,
@@ -28,12 +27,13 @@ export class AppLoad extends LitElement {
 
         await this.sleep(300);
 
-        const session = getCookie('user');
-        if (session) {
-            window.location.href = '/home';
-        } else {
-            window.location.href = '/login';
-        }
+        // const session = getCookie('user');
+        // if (session) {
+        //     window.location.href = '/home';
+        // } else {
+        //     window.location.href = '/login';
+        // }
+        window.location.href = '/home';
 
     }
 

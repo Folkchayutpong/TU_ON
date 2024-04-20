@@ -34,10 +34,10 @@ export class AppLogin extends LitElement {
     // for more info check out the lit docs https://lit.dev/docs/components/lifecycle/
 
     // Check if user exists in cookie
-    const userCookie = getCookie('user');
-    if (userCookie) {
-      window.location.href = '/home';
-      }
+    // const userCookie = getCookie('user');
+    // if (userCookie) {
+    //   window.location.href = '/home';
+    //   }
     }
 
   render() {

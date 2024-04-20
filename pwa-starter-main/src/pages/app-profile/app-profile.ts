@@ -22,22 +22,22 @@ export class AppAbout extends LitElement {
   async firstUpdated() {
     // this method is a lifecycle even in lit
     // for more info check out the lit docs https://lit.dev/docs/components/lifecycle/
-    const userCookie = getCookie('user');
-    if (userCookie) {
-      // Edit the URL to match your API endpoint
-      fetch(`${url}/users?id=${JSON.parse(userCookie).id}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.length > 0) {
-          this.activeTab = 'profile';
-        } else {
-          deleteCookie('user');
-          window.location.href = '/';
-        }
-      });
-    } else {
-      window.location.href = '/';
-    }
+    // const userCookie = getCookie('user');
+    // if (userCookie) {
+    //   // Edit the URL to match your API endpoint
+    //   fetch(`${url}/users?id=${JSON.parse(userCookie).id}`)
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     if (data.length > 0) {
+    //       this.activeTab = 'profile';
+    //     } else {
+    //       deleteCookie('user');
+    //       window.location.href = '/';
+    //     }
+    //   });
+    // } else {
+    //   window.location.href = '/';
+    // }
   }
 
   render() {

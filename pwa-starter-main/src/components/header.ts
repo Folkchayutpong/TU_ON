@@ -1,49 +1,29 @@
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-import { resolveRouterPath } from '../router';
+// import { resolveRouterPath } from '../router';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 
 @customElement('app-header')
 export class AppHeader extends LitElement {
-  @property({ type: String }) title = 'PWA Starter';
+  @property({ type: String }) username = 'demo username';
+  @property({ type: String }) faculty = 'demo faculty';
 
   @property({ type: Boolean}) enableBack: boolean = false;
 
   static styles = css`
     header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--app-color-primary);
-      color: white;
-      padding: 12px;
-      padding-top: 4px;
+      color: black;
 
       position: fixed;
       left: env(titlebar-area-x, 0);
       top: env(titlebar-area-y, 0);
-      height: env(titlebar-area-height, 30px);
       width: env(titlebar-area-width, 100%);
       -webkit-app-region: drag;
     }
 
-    header h1 {
-      margin-top: 0;
-      margin-bottom: 0;
-      font-size: 12px;
-      font-weight: bold;
-    }
-
     nav a {
       margin-left: 10px;
-    }
-
-    #back-button-block {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
     }
 
     .bgOval {
@@ -58,6 +38,32 @@ export class AppHeader extends LitElement {
     }
 
     .bgOval-50 { position: absolute; left: 50%; top: -8vh; }
+
+    .data {
+      display: flex;
+      gap: 10px;
+      position: fixed;
+      margin: 20px 32px;
+    }
+
+    div.data h1 {
+      font-size: 24px;
+      margin: 0;
+    }
+    div.data h2 {
+      font-size: 16px;
+      font-weight: 400;
+      margin: 0;
+    }
+
+    div.data img {
+      border: 3px solid white;
+      border-radius: 40px;
+    }
+    div.data div {
+      position: relative;
+      top: 20px;
+    }
 
     @media(orientation: landscape) {
       .bgOval {
@@ -81,16 +87,14 @@ export class AppHeader extends LitElement {
         <div class="bgOval-50">
           <div class="bgOval"></div>
         </div>
-        <!-- example code -->
-        <!--
-        <div id="back-button-block">
-          ${this.enableBack ? html`<sl-button size="small" href="${resolveRouterPath()}">
-            Back
-          </sl-button>` : null}
 
-          <h1>${this.title}</h1>
+        <div class="data">
+          <img src="/assets/icons/192-192.png" width="125" height="125">
+          <div>
+            <h1>${this.username}</h1>
+            <h2>${this.faculty}</h2>
+          </div>
         </div>
-        -->
       </header>
     `;
   }

@@ -37,7 +37,8 @@ export class AppHome extends LitElement {
     }
 
     main {
-      margin-top: 160px;
+      margin-top: 140px;
+      padding-bottom: 70px;
     }
 
     @media(min-width: 750px) {
@@ -90,6 +91,7 @@ export class AppHome extends LitElement {
       <!-- Main content -->
       <main>
         <post-component></post-component>
+        <file-component></file-component>
       </main>
 
       <bottom-navigation activeTab="${this.activeTab}"></bottom-navigation>

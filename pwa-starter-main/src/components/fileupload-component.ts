@@ -1,12 +1,9 @@
 import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 
-@customElement('post-component')
-export class PostComponent extends LitElement {
+@customElement('file-component')
+export class fileComponent extends LitElement {
 
-  @property({ type: String }) nowdate = new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Bangkok',
-    day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit'}).replace(' ', 'T').slice(0, 16);
   static styles = css`
     /* Add your styles here */
     .card {
@@ -49,14 +46,37 @@ export class PostComponent extends LitElement {
       box-shadow: 0 0 5px 0 #00000040 inset;
     }
 
-    input[type="datetime-local"] {
-      appearance: menulist-button;
+    input[type="file"] {
+      width: 80%;
+      height: 30px;
+      padding: 10px 0 10px 10px;
+      border-radius: 20px;
+      background-color: #C2E2F5;
+      border: none;
+      box-shadow: 0 0 5px 0 #00000040 inset;
+      align-content: center;
+      box-shadow: none;
+      margin: 10px 0;
     }
-    input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-      // display: none;
-      // -webkit-appearance: none;
-      margin-right: 10px;
+    input[type="file"]::-webkit-file-upload-button {
+      background-color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 20px;
     }
+    input[type="radio"] {
+      box-shadow: none;
+    }
+    .line {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    span {
+      display: flex;
+      align-items: center;
+    }
+
     .end {
       display: flex;
       justify-content: end;
@@ -74,36 +94,17 @@ export class PostComponent extends LitElement {
   `;
 
   render() {
-    console.log(this.nowdate);
     return html`
       <form @submit=${this.post}>
       <div class="card">
         <table>
           <tr>
-            <td><h3>สร้างโพสหาเพื่อนติวหรืออ่านหนังสือ</h3></td>
+            <td><h3>อัปโหลดไฟล์</h3></td>
           </tr>
           <tr>
           <td>
             <label for="topic">หัวข้อ</label>
             <input type="text" placeholder="เขียนอะไรสักอย่าง" id="topic" name="topic" required>
-          </td>
-          </tr>
-          <tr>
-          <td>
-            <label for="detail">รายละเอียด</label>
-            <textarea row="4" placeholder="เขียนอะไรสักอย่าง" id="detail" name="detail" required></textarea>
-          </td>
-          </tr>
-          <tr>
-          <td>
-            <label for="date">วันที่/เวลา</label>
-            <input type="datetime-local" id="date" value="${this.nowdate}" required>
-          </td>
-          </tr>
-          <tr>
-          <td>
-            <label for="location">สถานที่</label>
-            <input type="text" placeholder="เขียนอะไรสักอย่าง" id="location" required>
           </td>
           </tr>
           <tr>
@@ -114,8 +115,20 @@ export class PostComponent extends LitElement {
           </tr>
           <tr>
           <td>
-            <label for="contact">ติดต่อ</label>
-            <input type="text" placeholder="เขียนอะไรสักอย่าง" id="contact" required>
+            <input type="file" id="file" required>
+          </td>
+          </tr>
+          <tr>
+          <td class="line">
+            <label for="type">ประเภท:  </label>
+            <span>
+              <input type="radio" id="mid" name="type" value="Midterm" checked>
+              <label for="mid">Midterm</label>
+            </span>
+            <span>
+              <input type="radio" id="fin" name="type" value="Final" >
+              <label for="fin">Final</label>
+            </span>
           </td>
           </tr>
           <tr>

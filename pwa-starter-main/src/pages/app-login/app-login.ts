@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-import { getCookie } from '../../utils/cookie-utils';
+//import { getCookie } from '../../utils/cookie-utils';
 import { resolveRouterPath } from '../../router';
 
 // You can also import styles from another file

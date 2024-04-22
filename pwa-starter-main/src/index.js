@@ -1,8 +1,11 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc, doc, where, query } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js"
+//import { resolve } from "path";
+//import { json } from "stream/consumers";
 import { v4 as uuidv4 } from 'uuid';
 import AES from 'crypto-js/aes';
 import Utf8 from 'crypto-js/enc-utf8';
+
 
 // export { addData } from "../index.js"
 // TODO: Add SDKs for Firebase products that you want to use
@@ -61,13 +64,13 @@ export async function getUserByUsername(userVal) {
 }
 
 // นำเข้าข้อมูล user
-export async function addData(userVal, passVal) {
+export async function addData(userVal, passVal, nameVal, facultyVal) {
     try {
         const docRef = await addDoc(collection(db, 'User'), {
-            faculty: "",
+            faculty: String(facultyVal),
             fileID: [],
             id: uuidv4(),
-            name: "",
+            name: String(nameVal),
             picPath: "",
             postID: [],
             username: String(userVal),
@@ -89,14 +92,29 @@ function showData(User) {
     });
 }
 
+//Encrypt & Decrpyt
+/*function encry() {
+    const url = db;
+    fetch(url).then(getUser())
+        .then(data => {
+            data.forEach((item) => {
+                const val = btoa(item.passVal);
+                const val1 = atob(val);
+                console.log(item.passVal);
 
-//Encrpyt
-const encryptWithAES = (text, passphrase) => {
-  return AES.encrypt(text, passphrase).toString();
-};
+            })
+        })
+}*/
 
-const decryptWithAES = (ciphertext, passphrase) => {
-  const bytes = AES.decrypt(ciphertext, passphrase);
-  const originalText = bytes.toString(Utf8);
-  return originalText;
-};
+const secretKey = "MySecretKey";
+
+// Function to encrypt a password
+export async function encrypt(text) {
+    return AES.encrypt(text, secretKey).toString();
+}
+
+// Function to decrypt an encrypted password
+export function decrypt(encrypted) {
+    const bytes = AES.decrypt(encrypted, secretKey);
+    return bytes.toString(Utf8);
+}

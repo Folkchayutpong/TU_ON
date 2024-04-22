@@ -1,13 +1,13 @@
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-// import { resolveRouterPath } from '../router';
+//import { resolveRouterPath } from '../router';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 
 @customElement('app-header')
 export class AppHeader extends LitElement {
   @property({ type: String }) username = 'demo username';
-  @property({ type: String }) faculty = 'demo faculty';
+  @property({ type: String }) faculty = 'Faculty of Demo';
 
   @property({ type: Boolean }) enableBack: boolean = false;
 

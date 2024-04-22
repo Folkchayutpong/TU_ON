@@ -21,18 +21,27 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
   <!-- splash screen for ios -->
-  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/320x568.png" media="(width: 320px) and (height: 568px) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/375x667.png" media="(width: 375px) and (height: 667px) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/375x812.png" media="(width: 375px) and (height: 812px) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/390x844.png" media="(width: 390px) and (height: 844px) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/393x852.png" media="(width: 393px) and (height: 852px) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/414x736.png" media="(width: 414px) and (height: 736px) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/414x896.png" media="(width: 414px) and (height: 896px) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/428x926.png" media="(width: 428px) and (height: 926px) and (orientation: portrait)">
-  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/430x932.png" media="(width: 430px) and (height: 932px) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/320x568.png"
+    media="(width: 320px) and (height: 568px) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/375x667.png"
+    media="(width: 375px) and (height: 667px) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/375x812.png"
+    media="(width: 375px) and (height: 812px) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/390x844.png"
+    media="(width: 390px) and (height: 844px) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/393x852.png"
+    media="(width: 393px) and (height: 852px) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/414x736.png"
+    media="(width: 414px) and (height: 736px) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/414x896.png"
+    media="(width: 414px) and (height: 896px) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/428x926.png"
+    media="(width: 428px) and (height: 926px) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/assets/ios/splash/light/430x932.png"
+    media="(width: 430px) and (height: 932px) and (orientation: portrait)">
 
   <!-- This tag is used by the PWA Starter CLI to identify template projects. Don't remove if you are using the CLI. -->
-  <meta name="pwa-starter-template-identity" content="pwa-starter"/>
+  <meta name="pwa-starter-template-identity" content="pwa-starter" />
 
   <!-- Imports an icon to represent the document. -->
   <link rel="icon" href="/assets/icons/icon_192.png" type="image/png" />
@@ -53,7 +62,7 @@
 <body>
   <!-- Our app-index web component. This component is defined in src/pages/app-index.ts-->
   <app-index></app-index>
-
+  <script src="src/index.js" type="module"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.onload = () => {
@@ -63,6 +72,7 @@
       }
     }
   </script>
+
 </body>
 
 </html>

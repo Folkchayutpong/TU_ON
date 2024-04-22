@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { setCookie, url } from '../utils/cookie-utils';
+import { addData } from '../index';
 
 @customElement('signup-component')
 export class SignupComponent extends LitElement {
@@ -18,44 +18,27 @@ export class SignupComponent extends LitElement {
   render() {
     return html`
       <form @submit=${this.signup}>
-      <div>
-        <input type="text" placeholder="Username" id="username" required>
-        <input type="password" placeholder="Password" id="password" required>
-        <button type="submit">Signup</button>
-      </div>
+        <div>
+          <input type="text" placeholder="Username" id="username" required>
+          <input type="password" placeholder="Password" id="password" required>
+          <button type="submit">Signup</button>
+        </div>
       </form>
     `;
   }
-
-  signup(event: Event) {
+  //อยากให้ encrypt และตรวจสอบว่า user ซ้ำมั้ย?
+  async signup(event: Event) {
     event.preventDefault();
     const username = (this.shadowRoot!.getElementById('username') as HTMLInputElement).value;
     const password = (this.shadowRoot!.getElementById('password') as HTMLInputElement).value;
 
-    // Edit the URL to match your API endpoint
-    fetch(`${url}/users`, {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      if (data.id) {
-        setCookie('user', JSON.stringify(data), 1);  // Set user data in cookie for 1 day
-        window.location.href = '/';
-      } else {
-        alert('Signup failed. Please try again.');
-      }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Signup failed. Please try again.');
-    });
-
-    // Redirect to home page after signup
-    window.location.href = '/';
+    try {
+      const docRef = await addData(username, password);
+      console.log("Document ID:", docRef.id);
+      window.location.href = '/login';
+    } catch (error: any) {
+      console.error('Signup failed:', error.message);
+      alert('Signup failed. Please try again.');
+    }
   }
 }

@@ -9,7 +9,7 @@ export class AppHeader extends LitElement {
   @property({ type: String }) username = 'demo username';
   @property({ type: String }) faculty = 'demo faculty';
 
-  @property({ type: Boolean}) enableBack: boolean = false;
+  @property({ type: Boolean }) enableBack: boolean = false;
 
   static styles = css`
     header {

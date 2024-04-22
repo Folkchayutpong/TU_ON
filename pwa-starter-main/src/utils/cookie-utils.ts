@@ -1,6 +1,7 @@
-const url = 'http://192.168.2.41:3001';
+const url = 'http://192.168.1.111:3001';
 export { url };
 
+// cookieUtils.ts
 export function setCookie(name: string, value: string, days: number) {
     const date = new Date();
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
@@ -9,17 +10,14 @@ export function setCookie(name: string, value: string, days: number) {
     return value;
 }
 
-export function getCookie(name: string): string | null {
-    const cookieArr = document.cookie.split(";");
-
-    for (let i = 0; i < cookieArr.length; i++) {
-        const cookiePair = cookieArr[i].split("=");
-
-        if (name === cookiePair[0].trim()) {
-        return decodeURIComponent(cookiePair[1]);
+export function getUserIdFromCookie(cookieName: string): string | null {
+    const cookies = document.cookie.split(';').map(cookie => cookie.trim());
+    for (const cookie of cookies) {
+        const [name, value] = cookie.split('=');
+        if (name === cookieName) {
+            return value;
         }
     }
-
     return null;
 }
 

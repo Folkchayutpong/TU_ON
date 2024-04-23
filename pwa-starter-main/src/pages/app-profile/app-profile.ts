@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-import { getCookie, deleteCookie, url } from '../../utils/cookie-utils';
+//import { getCookie, deleteCookie, url } from '../../utils/cookie-utils';
 
 // You can also import styles from another file
 // if you prefer to keep your CSS seperate from your component

@@ -24,3 +24,13 @@ export function getUserIdFromCookie(cookieName: string): string | null {
 export function deleteCookie(name: string) {
     document.cookie = name + '=; Max-Age=-99999999;';
 }
+
+//ลอง
+function getDataFromCookies() {
+    const username = getUserIdFromCookie('username'); // Call the method to retrieve the username from cookies
+    const password = getUserIdFromCookie('password'); // Call the method to retrieve the password from cookies
+
+    console.log('Username from cookies:', username);
+    console.log('Password from cookies:', password);
+}
+//getDataFromCookies()

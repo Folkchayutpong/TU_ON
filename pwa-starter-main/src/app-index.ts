@@ -13,6 +13,9 @@ import './components/signup-component';
 import './components/logout-component';
 import './components/post-component';
 import './components/fileupload-component';
+import './components/feed-list';
+import './components/search-bar';
+import './components/mid-fin';
 
 @customElement('app-index')
 export class AppIndex extends LitElement {

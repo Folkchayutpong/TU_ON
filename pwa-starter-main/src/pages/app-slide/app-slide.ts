@@ -1,22 +1,32 @@
-import { LitElement, html } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 // import { getCookie, deleteCookie, url } from '../../utils/cookie-utils';
 
 // You can also import styles from another file
 // if you prefer to keep your CSS seperate from your component
-import { styles } from './profile-styles';
+
 
 import { styles as sharedStyles } from '../../styles/shared-styles'
 
 import '@shoelace-style/shoelace/dist/components/card/card.js';
 
-@customElement('app-profile')
-export class AppProfile extends LitElement {
-  @property() activeTab: string = 'profile';
+@customElement('app-slide')
+export class AppSlide extends LitElement {
+  @property() activeTab: string = 'slide';
 
   static styles = [
     sharedStyles,
-    styles
+    css`
+      feed-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      main {
+        margin-top: 80px;
+      }
+    `
   ]
 
   async firstUpdated() {
@@ -42,26 +52,12 @@ export class AppProfile extends LitElement {
 
   render() {
     return html`
-      <app-header ?enableBack="${true}"></app-header>
+      <search-bar></search-bar>
 
       <main>
-        <h2>About Page</h2>
-
-        <sl-card>
-          <h2>Did you know?</h2>
-
-          <p>PWAs have access to many useful APIs in modern browsers! These
-            APIs have enabled many new types of apps that can be built as PWAs, such as advanced graphics editing apps, games,
-            apps that use machine learning and more!
-          </p>
-
-          <p>Check out <a
-              href="https://docs.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/how-to/handle-files">these
-              docs</a> to learn more about the advanced features that you can use in your PWA</p>
-        </sl-card>
+        <mid-fin></mid-fin>
+        <feed-list></feed-list>
       </main>
-
-      <logout-component></logout-component>
 
       <bottom-navigation activeTab="${this.activeTab}"></bottom-navigation>
     `;

@@ -63,7 +63,7 @@ export class BottomNavigation extends LitElement {
         <a href="${resolveRouterPath('home')}" class="${this.activeTab === 'home' ? 'active' : ''}">
             <img src="/assets/fa/Home.svg" alt="Home" id="btn-home">
         </a>
-        <a href="#SLIDE" class="${this.activeTab === 'slide' ? 'active' : ''}">
+        <a href="${resolveRouterPath('slide')}" class="${this.activeTab === 'slide' ? 'active' : ''}">
             <img src="/assets/fa/Slide.svg" alt="Slide" id="btn-slide">
         </a>
         <a href="#TUTOR" class="${this.activeTab === 'tutor' ? 'active' : ''}">

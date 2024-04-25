@@ -35,6 +35,7 @@ html, body {
   body {
     background-color: #ECD8E7;
     background-image: linear-gradient(#ECD8E7 0%, #D6DDEE 100%);
+    background-attachment: fixed;
     color: black;
   }
 }

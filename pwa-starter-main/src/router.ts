@@ -48,6 +48,14 @@ export const router = new Router({
         render: () => html`<app-home></app-home>`
       },
       {
+        path: resolveRouterPath('slide'),
+        title: 'Slide',
+        plugins: [
+          lazy(() => import('./pages/app-slide/app-slide.js')),
+        ],
+        render: () => html`<app-slide></app-slide>`
+      },
+      {
         path: resolveRouterPath('profile'),
         title: 'Profile',
         plugins: [

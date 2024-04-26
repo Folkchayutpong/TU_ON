@@ -56,6 +56,14 @@ export const router = new Router({
         render: () => html`<app-slide></app-slide>`
       },
       {
+        path: resolveRouterPath('tutor'),
+        title: 'Tutor',
+        plugins: [
+          lazy(() => import('./pages/app-tutor/app-tutor.js')),
+        ],
+        render: () => html`<app-tutor></app-tutor>`
+      },
+      {
         path: resolveRouterPath('profile'),
         title: 'Profile',
         plugins: [

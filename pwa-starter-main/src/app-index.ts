@@ -16,6 +16,7 @@ import './components/fileupload-component';
 import './components/feed-list';
 import './components/search-bar';
 import './components/mid-fin';
+import './components/post-list';
 
 @customElement('app-index')
 export class AppIndex extends LitElement {

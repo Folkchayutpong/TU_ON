@@ -20,8 +20,6 @@ export class FeedList extends LitElement {
     img {
       border-radius: 40px;
       margin: 6px;
-      background-color: orange;
-      align-self: center;
     }
 
     h2, p {
@@ -39,7 +37,7 @@ export class FeedList extends LitElement {
       align-self: flex-end;
     }
 
-    input[type="submit"] {
+    button {
       margin: 9px 0;
       padding: 5px 5px;
       width: 50px;
@@ -47,6 +45,10 @@ export class FeedList extends LitElement {
       border-radius: 20px;
       background-color: #C2E2F599;
       border: none;
+    }
+    button img {
+      margin: 0;
+    }
   `;
 
 //   example feedList data
@@ -69,7 +71,7 @@ export class FeedList extends LitElement {
           <span class="download">
           <form @submit=${this.download}>
             <input type="hidden" name="content" value="${feed.content}">
-            <input type="submit" value="1">
+            <button type="submit" value="1"><img src="/assets/fa/Download.svg"></button>
           </form>
           </span>
         </div>

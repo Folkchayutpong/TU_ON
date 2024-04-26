@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { setCookie, url } from '../utils/cookie-utils';
-import { getUserByUsername, decrypt} from "../index"
+import { setCookie, url, getCookie } from '../utils/cookie-utils';
+import { getUser, decryptText } from "../index"
 
 @customElement('login-component')
 export class LoginComponent extends LitElement {
@@ -27,57 +27,60 @@ export class LoginComponent extends LitElement {
       </form>
     `;
   }
-  //อยากให้ encrypt ตรงนี้ด้วย
-  /*async login(event: Event) {
-    event.preventDefault();
-    const username = (this.shadowRoot!.getElementById('username') as HTMLInputElement).value;
-    const password = (this.shadowRoot!.getElementById('password') as HTMLInputElement).value;
-
-
-    try {
-      const data = await getUserByUsername(username);
-      if (data.username === username && data.password === password) {
-        setCookie('username', data.username, 1);
-        window.location.href = `/home`;
-      } else {
-        alert('Invalid username or password');
-      }
-    } catch (error) {
-      console.error("Error to login: ", error);
-      alert('Error occurred while logging in');
-    }
-  }*/
 
   async login(event: Event) {
     event.preventDefault();
     const usernameInput = (this.shadowRoot!.getElementById('username') as HTMLInputElement).value;
     const passwordInput = (this.shadowRoot!.getElementById('password') as HTMLInputElement).value;
-
     try {
-        // Retrieve encrypted password from Firebase based on the provided username
-        const userData = await getUserByUsername(usernameInput);
-        if (!userData) {
-            alert('User not found');
-            return;
-        }
+      const userData = await getUser();
+      for (const aUser of userData.docs) {
+        const data = aUser.data();
+        const decryptedUser = await decryptText(data.username);
+        const decryptedPass = await decryptText(data.password);
 
-        // Decrypt the stored password from Firebase
-        const decryptedPassword = await decrypt(userData.password);
+        const isValidCredentials = decryptedUser === usernameInput && decryptedPass === passwordInput;
 
-        // Compare the decrypted password with the user input
-        if (decryptedPassword === passwordInput) {
-            // Authentication successful
-            setCookie('username', usernameInput, 1);
-            window.location.href = '/home';
-        } else {
-            // Authentication failed
-            alert('Invalid username or password');
+        if (isValidCredentials) {
+          setCookie(data.id)
+          window.location.href = '/home';
+          return;
         }
-    } catch (error: any) {
-        // Handle errors
-        console.error('Error while logging in:', error.message);
-        alert('Error occurred while logging in');
+      }
+      alert('Invalid username or password');
+
+    } catch (error) {
+      console.error('Error while logging in:', error);
+      alert('Error occurred while logging in');
     }
-}
 
+
+  }
 }
+// async login(event: Event) {
+//   event.preventDefault();
+//   const usernameInput = (this.shadowRoot!.getElementById('username') as HTMLInputElement).value;
+//   const passwordInput = (this.shadowRoot!.getElementById('password') as HTMLInputElement).value;
+//   try {
+//     const userData = await getUser(); // Wait for the Promise to resolve
+//     for (const aUser of userData.docs) {
+//       const data = aUser.data;
+//       const decryptedUser = await decryptText(data.username);
+//       const decryptedPass = await decryptText(data.password);
+
+//       const isValidCredentials = decryptedUser === usernameInput && decryptedPass === passwordInput;
+
+//       if (isValidCredentials) {
+//         setCookie(data.id)
+//         window.location.href = '/home';
+//         return;
+//       }
+//     }
+//     alert('Invalid username or password');
+
+//   } catch (error) {
+//     console.error('Error while logging in:', error);
+//     alert('Error occurred while logging in');
+//   }
+// }
+

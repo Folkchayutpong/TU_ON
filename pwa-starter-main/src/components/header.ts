@@ -1,16 +1,67 @@
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-//import { resolveRouterPath } from '../router';
+import { getCookie } from '../utils/cookie-utils';
+// import '@shoelace-style/shoelace/dist/components/button/button.js';
+import { getCollUser, getUserByID } from '../index';
 
-import '@shoelace-style/shoelace/dist/components/button/button.js';
+
+async function getData(): Promise<any> {
+  try {
+    let d = getCollUser(String(document.cookie));
+    return await d;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    return {};
+  }
+}
 
 @customElement('app-header')
 export class AppHeader extends LitElement {
-  @property({ type: String }) username = 'demo username';
-  @property({ type: String }) faculty = 'Faculty of Demo';
+  @property({ type: String }) username: string = '';
+  @property({ type: String }) faculty: string = '';
 
-  @property({ type: Boolean }) enableBack: boolean = false;
+  connectedCallback() {
+    super.connectedCallback();
+    getData().then(data => {
+      this.username = data["name"] || "undefined";
+      this.faculty = data["faculty"] || "undefined";
+    });
 
+
+  }
+
+
+
+
+
+
+
+
+
+  // connectedCallback() {
+  //   super.connectedCallback();
+  //   this.getData();
+  // }
+
+
+
+  // connectedCallback() {
+  //   super.connectedCallback();
+  //   this.retrieveUserDataFromCookies();
+  // }
+
+  // async retrieveUserDataFromCookies() {
+  // const username = this.aData;
+  // const faculty = getCookie('username');
+
+  //   if (username) {
+  //     this.username = username;
+  //   }
+
+  //   if (faculty) {
+  //     this.faculty = faculty;
+  //   }
+  // }
   static styles = css`
     header {
       color: black;
@@ -98,4 +149,5 @@ export class AppHeader extends LitElement {
       </header>
     `;
   }
+
 }

@@ -11,7 +11,7 @@ import { styles as sharedStyles } from '../../styles/shared-styles'
 import '@shoelace-style/shoelace/dist/components/card/card.js';
 
 @customElement('app-profile')
-export class AppAbout extends LitElement {
+export class AppProfile extends LitElement {
   @property() activeTab: string = 'profile';
 
   static styles = [

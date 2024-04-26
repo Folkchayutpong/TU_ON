@@ -48,6 +48,22 @@ export const router = new Router({
         render: () => html`<app-home></app-home>`
       },
       {
+        path: resolveRouterPath('slide'),
+        title: 'Slide',
+        plugins: [
+          lazy(() => import('./pages/app-slide/app-slide.js')),
+        ],
+        render: () => html`<app-slide></app-slide>`
+      },
+      {
+        path: resolveRouterPath('tutor'),
+        title: 'Tutor',
+        plugins: [
+          lazy(() => import('./pages/app-tutor/app-tutor.js')),
+        ],
+        render: () => html`<app-tutor></app-tutor>`
+      },
+      {
         path: resolveRouterPath('profile'),
         title: 'Profile',
         plugins: [

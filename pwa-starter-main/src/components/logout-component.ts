@@ -19,7 +19,6 @@ export class LogoutComponent extends LitElement {
 
   logout(event: Event) {
     event.preventDefault();
-    setCookie('user', '', 0);  // Clear user data in cookie
-    window.location.href = '/';
+    window.location.href = '/login';
   }
 }

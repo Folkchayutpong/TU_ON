@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
+import { addFile } from "../index"
 
 @customElement('file-component')
 export class fileComponent extends LitElement {
@@ -12,6 +13,7 @@ export class fileComponent extends LitElement {
       background-color: white;
       border-radius: 40px;
       box-shadow: 0 0 10px 0 #00000040;
+      color: black;
     }
 
     h3 {
@@ -122,11 +124,11 @@ export class fileComponent extends LitElement {
           <td class="line">
             <label for="type">ประเภท:  </label>
             <span>
-              <input type="radio" id="mid" name="type" value="Midterm" checked>
+              <input type="radio" id="ismid" name="type" value="true" checked>
               <label for="mid">Midterm</label>
             </span>
             <span>
-              <input type="radio" id="fin" name="type" value="Final" >
+              <input type="radio" id="ismid" name="type" value="false" >
               <label for="fin">Final</label>
             </span>
           </td>
@@ -142,7 +144,23 @@ export class fileComponent extends LitElement {
     `;
   }
 
-  post(event: Event) {
-    // Add your code here
+  async post(event: Event) {
+    event.preventDefault();
+    const topic = (this.shadowRoot!.getElementById('topic') as HTMLInputElement).value;
+    const subject = (this.shadowRoot!.getElementById('subject') as HTMLInputElement).value;
+    const file = (this.shadowRoot!.getElementById('file') as HTMLInputElement).files;
+    const ismid = (this.shadowRoot!.getElementById('ismid') as HTMLInputElement).value;
+
+    try {
+
+      const docRef = await addFile(file, ismid, subject, topic, "uID");
+      console.log("Document ID:", docRef.uID);
+      window.location.href = '/home';
+      return;
+
+    } catch (error: any) {
+      console.error('Post failed:', error.message);
+      alert('Post failed. Please try again.');
+    }
   }
 }

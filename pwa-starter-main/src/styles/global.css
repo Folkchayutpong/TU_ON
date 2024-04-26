@@ -23,9 +23,10 @@ html, body {
 
   html,
   body {
-    background-color: #584859;
-    background-image: linear-gradient(#000000 0%, #584859 100%);
-    color: white;
+    background-color: #ECD8E7;
+    background-image: inear-gradient(#ECD8E7 0%, #D6DDEE 100%);
+    background-attachment: fixed;
+    color: black;
   }
 }
 
@@ -35,6 +36,7 @@ html, body {
   body {
     background-color: #ECD8E7;
     background-image: linear-gradient(#ECD8E7 0%, #D6DDEE 100%);
+    background-attachment: fixed;
     color: black;
   }
 }

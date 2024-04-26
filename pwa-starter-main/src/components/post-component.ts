@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
+import { addPost } from '../index';
 
 @customElement('post-component')
 export class PostComponent extends LitElement {
@@ -15,6 +16,7 @@ export class PostComponent extends LitElement {
       background-color: white;
       border-radius: 40px;
       box-shadow: 0 0 10px 0 #00000040;
+      color: black;
     }
 
     h3 {
@@ -129,7 +131,24 @@ export class PostComponent extends LitElement {
     `;
   }
 
-  post(event: Event) {
-    // Add your code here
+  async post(event: Event) {
+    event.preventDefault();
+    const topicInput = (this.shadowRoot!.getElementById('topic') as HTMLInputElement).value;
+    const detailInput = (this.shadowRoot!.getElementById('detail') as HTMLInputElement).value;
+    const dateInput = (this.shadowRoot!.getElementById('date') as HTMLInputElement).value;
+    const locationInput = (this.shadowRoot!.getElementById('location') as HTMLInputElement).value;
+    const subjectInput = (this.shadowRoot!.getElementById('subject') as HTMLInputElement).value;
+    const contactInput = (this.shadowRoot!.getElementById('contact') as HTMLInputElement).value;
+
+    try {
+      const docRef = await addPost(contactInput, detailInput, subjectInput, dateInput, topicInput, "uID", locationInput);
+      console.log("Document ID:", docRef.uID);
+      window.location.href = '/home';
+      return;
+
+    } catch (error: any) {
+      console.error('Post failed:', error.message);
+      alert('Post failed. Please try again.');
+    }
   }
 }

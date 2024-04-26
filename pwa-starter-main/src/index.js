@@ -1,10 +1,13 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc, doc, where, query } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js"
+import { getStorage, ref, uploadBytes, getBytes, getBlob, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
 //import { resolve } from "path";
 //import { json } from "stream/consumers";
 import { v4 as uuidv4 } from 'uuid';
 import AES from 'crypto-js/aes';
 import Utf8 from 'crypto-js/enc-utf8';
+
+
 
 
 // export { addData } from "../index.js"
@@ -26,6 +29,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const storage = getStorage();
 const db = getFirestore(app);
 
 // ดึงข้อมูล user
@@ -34,17 +38,113 @@ export async function getUser() {
     return querySnapshot
 
 };
+// ดึงข้อมูล Post
+export async function getPost() {
+    const querySnapshot = await getDocs(collection(db, "Tutor"));
+    return querySnapshot
+
+};
+
+// ดึงข้อมูล File
+export async function getFile() {
+    const querySnapshot = await getDocs(collection(db, "File"));
+    return querySnapshot
+
+};
 
 // ดึงข้อมูล Document ของ Users โดยใช้ id
-async function getUserByID(Id_user) {
+export async function getUserByID(Id_user) {
     const data = await getUser()
     var d;
-    data.forEach(aUser => {
-        if (aUser.data().id == Id_user) {
-            d = aUser
+    console.log(Id_user)
+    try {
+        data.forEach(aUser => {
+            if (aUser.data().id == Id_user) {
+                d = aUser
+            }
+        });
+        return d.data()
+    } catch (e) {
+        throw e;
+    }
+}
+
+// ดึงข้อมูล Document ของ Post โดยใช้ id
+export async function getPostByID(Id) {
+    const data = await getPost()
+    var d;
+    try {
+        data.forEach(aPost => {
+            if (aPost.data().id == Id) {
+                d = aPost
+            }
+        });
+        return d.data()
+    } catch (e) {
+        throw e;
+    }
+}
+
+// ดึงข้อมูล Document ของ File โดยใช้ id
+export async function getFileByID(Id) {
+    const data = await getFile()
+    var d;
+    try {
+        data.forEach(aFile => {
+            if (aFile.data().id == Id) {
+                d = aFile
+            }
+        });
+        return d.data()
+    } catch (e) {
+        throw e;
+    }
+}
+
+//
+export async function getCollUser(Id) {
+    const data = await getUserByID(Id)
+    var d = {};
+    try {
+        d = {
+            "faculty": data.faculty, "fileID": data.fileID, "id": data.id, "name": data.name,
+            "password": data.password, "picPath": data.picPath, "postID": data.postID, "username": data.username
         }
-    });
-    return d.data()
+        return d
+    } catch (e) {
+        throw e;
+    }
+}
+
+//
+export async function getCollPost(Id) {
+    const data = await getPostByID()
+    var d = {};
+    try {
+        d = {
+            "con": data.con, "describ": data.describ, "joinedID": data.joinedID, "location": data.location,
+            "postID": data.postID, "tag": data.tag, "timeDate": data.timeDate, "title": data.title,
+            "uID": data.uID
+        }
+        return d
+    } catch (e) {
+        throw e;
+    }
+}
+
+//
+export async function getCollFile(Id) {
+    const data = await getFileByID()
+    var d = {};
+    try {
+        d = {
+            "fileID": data.fileID, "filepath": data.filepath, "isMid": data.isMid, "tag": data.tag,
+            "title": data.title, "uID": data.uID
+        }
+        return d
+    } catch (e) {
+        throw e;
+    }
 }
 
 //ดึงข้อมูล Document ของ Users โดขใช้ username
@@ -59,7 +159,7 @@ export async function getUserByUsername(userVal) {
         });
         return d.data()
     } catch (e) {
-        throw (e)
+        throw e;
     }
 }
 
@@ -92,29 +192,99 @@ function showData(User) {
     });
 }
 
-//Encrypt & Decrpyt
-/*function encry() {
-    const url = db;
-    fetch(url).then(getUser())
-        .then(data => {
-            data.forEach((item) => {
-                const val = btoa(item.passVal);
-                const val1 = atob(val);
-                console.log(item.passVal);
 
-            })
-        })
-}*/
 
 const secretKey = "MySecretKey";
 
 // Function to encrypt a password
-export async function encrypt(text) {
+export async function encryptText(text) {
     return AES.encrypt(text, secretKey).toString();
 }
 
 // Function to decrypt an encrypted password
-export function decrypt(encrypted) {
+export function decryptText(encrypted) {
     const bytes = AES.decrypt(encrypted, secretKey);
     return bytes.toString(Utf8);
+}
+
+// นำเข้าข้อมูล file
+export async function addFile(file, isMid, tag, title, uID) {
+    try {
+        const afileRef = ref(storage, 'file/' + file);
+        const meatadata = {
+            contentType: "application/pdf",
+        }
+
+        await uploadBytes(afileRef).then((snapshot) => {
+            console.log('Uploaded a file!');
+        });
+
+        const downloadURL = await getDownloadURL(afileRef); // ดึง URL ของไฟล์ที่อัพโหลด
+        const docRef = await addDoc(collection(db, 'File'), {
+            fileID: uuidv4(),
+            filepath: downloadURL, // ใช้ URL ของไฟล์แทน
+            isMid: Boolean(isMid),
+            tag: String(tag),
+            title: String(title),
+            uID: String(uID) // cookie ติดต่อเอาไอดีมาใส่ตรงนี้
+        });
+        console.log("Document successfully written!");
+        return docRef; // คืนค่า DocumentReference
+    } catch (error) {
+        console.error("Error writing document: ", error);
+        throw error;
+    }
+}
+
+
+//นำเข้า post
+export async function addPost(con, describ, tag, timeDate, title, uID, location) {
+    try {
+        const docRef = await addDoc(collection(db, 'Tutor'), {
+            con: String(con),
+            describ: String(describ),
+            postID: uuidv4(),
+            tag: String(tag),
+            timeDate: String(timeDate),
+            title: String(title),
+            uID: String(uID),//cookie ต้องติดต่อตรงนี้
+            location: String(location),
+            joinedID: []
+        });
+        console.log("Document successfully written!");
+        return docRef; // คืนค่า DocumentReference
+    } catch (error) {
+        console.error("Error writing document: ", error);
+        throw error;
+    }
+}
+
+//Feed Data อยู่หน้า mid เป็น true
+export async function feedDataList(isMid, tag = "") {
+    const Files = await getFile()
+    var aList = []
+
+    try {
+        Files.forEach(aFile => {
+            if (aFile.data().isMid == isMid) {
+                if (aFile.data().tag == tag) {
+                    aList.push({ title: aFile.data().title, content: aFile.data().filepath, tag: aFile.data().tag })
+                }
+                else if (tag == "") {
+                    aList.push({ title: aFile.data().title, content: aFile.data().filepath, tag: aFile.data().tag })
+                }
+            }
+        });
+        return aList
+    } catch (e) {
+        throw e;
+    }
+}
+
+
+
+export async function getFileDownloadURL(fromUser) {
+    const storageRef = ref(storage, fromUser);
+    const url = await getDownloadURL(storageRef);
+    return url;
 }

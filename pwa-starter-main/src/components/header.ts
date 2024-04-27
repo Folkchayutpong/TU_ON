@@ -25,42 +25,8 @@ export class AppHeader extends LitElement {
       this.username = data["name"] || "undefined";
       this.faculty = data["faculty"] || "undefined";
     });
-
-
   }
 
-
-
-
-
-
-
-
-
-  // connectedCallback() {
-  //   super.connectedCallback();
-  //   this.getData();
-  // }
-
-
-
-  // connectedCallback() {
-  //   super.connectedCallback();
-  //   this.retrieveUserDataFromCookies();
-  // }
-
-  // async retrieveUserDataFromCookies() {
-  // const username = this.aData;
-  // const faculty = getCookie('username');
-
-  //   if (username) {
-  //     this.username = username;
-  //   }
-
-  //   if (faculty) {
-  //     this.faculty = faculty;
-  //   }
-  // }
   static styles = css`
     header {
       color: black;

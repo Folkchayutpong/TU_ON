@@ -1,13 +1,27 @@
 import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 import { addPost } from '../index';
+import { getData } from './header';
 
 @customElement('post-component')
 export class PostComponent extends LitElement {
-
-  @property({ type: String }) nowdate = new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Bangkok',
+  @property({ type: String }) nowdate = new Date().toLocaleString('sv-SE', {
+    timeZone: 'Asia/Bangkok',
     day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit'}).replace(' ', 'T').slice(0, 16);
+    hour: '2-digit', minute: '2-digit'
+  }).replace(' ', 'T').slice(0, 16);
+  @property({ type: String }) uID: string = '';
+  @property({ type: String }) apostID: string = '';
+
+  async connectedCallback() {
+    super.connectedCallback();
+    try {
+      const data = await getData();
+      this.uID = data.id || "undefined";
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
   static styles = css`
     /* Add your styles here */
     .card {
@@ -76,6 +90,7 @@ export class PostComponent extends LitElement {
   `;
 
   render() {
+
     console.log(this.nowdate);
     return html`
       <form @submit=${this.post}>
@@ -140,9 +155,11 @@ export class PostComponent extends LitElement {
     const subjectInput = (this.shadowRoot!.getElementById('subject') as HTMLInputElement).value;
     const contactInput = (this.shadowRoot!.getElementById('contact') as HTMLInputElement).value;
 
-    try{
-      const docRef = await addPost(contactInput, detailInput, subjectInput, dateInput, topicInput, "uID", locationInput);
-      console.log("Document ID:", docRef.uID);
+    try {
+      console.log("uID: ", this.uID);
+      const docRef = await addPost(contactInput, detailInput, subjectInput, dateInput, topicInput, this.uID, locationInput);
+      console.log("uID: ", this.uID);
+      console.log("postID: ", this.apostID);
       window.location.href = '/home';
       return;
 

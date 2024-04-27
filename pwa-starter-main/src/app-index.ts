@@ -17,6 +17,9 @@ import './components/feed-list';
 import './components/search-bar';
 import './components/mid-fin';
 import './components/post-list';
+import './components/my-feed';
+import './components/my-post';
+import './components/schedule';
 
 @customElement('app-index')
 export class AppIndex extends LitElement {

@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, doc, where, query, updateDoc, arrayUnion, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js"
+import { getFirestore, collection, getDocs, addDoc, doc, where, query, updateDoc, arrayUnion, getDoc, deleteDoc, arrayRemove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js"
 import { getStorage, ref, uploadBytes, getBytes, getBlob, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
 //import { resolve } from "path";
 //import { json } from "stream/consumers";
@@ -7,10 +7,6 @@ import { v4 as uuidv4 } from 'uuid';
 import AES from 'crypto-js/aes';
 import Utf8 from 'crypto-js/enc-utf8';
 
-
-
-
-// export { addData } from "../index.js"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -56,7 +52,6 @@ export async function getFile() {
 export async function getUserByID(Id_user) {
     const data = await getUser()
     var d;
-    console.log(Id_user)
     try {
         data.forEach(aUser => {
             if (aUser.data().id == Id_user) {
@@ -73,7 +68,6 @@ export async function getUserByID(Id_user) {
 export async function getUserDocByID(Id_user) {
     const data = await getUser();
     var d;
-    console.log(Id_user);
     try {
         data.forEach(aUser => {
             if (aUser.data().id == Id_user) {
@@ -86,14 +80,30 @@ export async function getUserDocByID(Id_user) {
     }
 }
 
-
 // ดึงข้อมูล Document ของ Post โดยใช้ id
+export async function getPostDocByPostID(Id) {
+    const data = await getPost();
+    var d;
+    try {
+        data.forEach(aPost => {
+            if (aPost.data().postID == Id) {
+                d = aPost.ref; // Change to reference
+            }
+        });
+        return d;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+// ดึงข้อมูล Document ของ Post โดยใช้ Postid
 export async function getPostByID(Id) {
     const data = await getPost()
     var d;
     try {
         data.forEach(aPost => {
-            if (aPost.data().id == Id) {
+            if (aPost.data().postID == Id) {
                 d = aPost
             }
         });
@@ -103,13 +113,13 @@ export async function getPostByID(Id) {
     }
 }
 
-// ดึงข้อมูล data Document ของ File โดยใช้ id
+// ดึงข้อมูล data Document ของ File โดยใช้ Fileid
 export async function getFileByID(Id) {
     const data = await getFile()
     var d;
     try {
         data.forEach(aFile => {
-            if (aFile.data().uID == Id) {
+            if (aFile.data().fileID == Id) {
                 d = aFile
             }
         });
@@ -251,10 +261,21 @@ export async function addFile(file, isMid, tag, title, uID) {
             console.error('Error uploading PDF file:', error);
         });
 
+        //gen fileID
+        const newFileID = uuidv4()
+
+        //add fileID to Profile
+        const userdocRef = await getUserDocByID(uID);
+        await updateDoc(userdocRef, {
+            fileID: await arrayUnion(newFileID),
+        });
+
+        //get dowloadURL
         const downloadURL = await getDownloadURL(pdfFileRef); // ดึง URL ของไฟล์ที่อัพโหลด
 
+        //add fileInfo to df
         const docRef = await addDoc(collection(db, 'File'), {
-            fileID: uuidv4(),
+            fileID: newFileID,
             filepath: downloadURL, // ใช้ URL ของไฟล์แทน
             isMid: Boolean(isMid == "MID"),
             tag: String(tag).toUpperCase(),
@@ -273,11 +294,19 @@ export async function addFile(file, isMid, tag, title, uID) {
 
 //นำเข้า post
 export async function addPost(con, describ, tag, timeDate, title, uID, location) {
+
+    const newPostID = uuidv4()
+
+    const userdocRef = await getUserDocByID(uID);
+    await updateDoc(userdocRef, {
+        postID: await arrayUnion(newPostID),
+    });
+
     try {
         const docRef = await addDoc(collection(db, 'Tutor'), {
             con: String(con),
             describ: String(describ),
-            postID: uuidv4(),
+            postID: newPostID,
             tag: String(tag),
             timeDate: String(timeDate),
             title: String(title),
@@ -325,16 +354,7 @@ export async function getFileDownloadURL(fromUser) {
     return url;
 }
 
-export async function updateFileID(userID, newfileID) {
-    try {
-        const docRef = await getUserDocByID(userID);
-        await updateDoc(docRef, {
-            fileID: arrayUnion(newfileID),
-        });
-    } catch (error) {
-        throw error;
-    }
-}
+
 
 //Feed Data อยู่หน้า mid เป็น true
 export async function feedTutorList(isMid, tag = "") {
@@ -359,3 +379,150 @@ export async function feedTutorList(isMid, tag = "") {
         throw e;
     }
 }
+
+//Feed Post
+export async function feedPostList(tag) {
+    const Posts = await getPost();
+    var aList = [];
+
+    try {
+        Posts.forEach(Post => {
+            const titleData = Post.data().title;
+            const tagData = Post.data().tag;
+            if (titleData && tagData) {
+                const title = titleData.substring(0, 20);
+                const tagLimited = tagData.substring(0, 5);
+                if (tagData == tagLimited) {
+                    aList.push({ id: Post.data().postID, title: title, location: Post.data().location, tag: tagLimited, datetime: Post.data().timeDate, description: Post.data().describ, contact: Post.data().con });
+                } else if (tag == "") {
+                    aList.push({ id: Post.data().postID, title: title, location: Post.data().location, tag: tagLimited, datetime: Post.data().timeDate, description: Post.data().describ, contact: Post.data().con });
+                }
+            }
+        });
+        return aList;
+    } catch (e) {
+        throw e;
+    }
+}
+
+//ฟังชันใช้ในหน้า profile - ไฟล์ที่ตั้วเอง(uid) เคยโพส
+export async function ProfilefeedDataList(uID) {
+    const user = await getUserByID(uID)
+    const FilesID = user.fileID
+    var aList = [];
+    for (var aFileID in FilesID) {
+        var aFile = await getFileByID(FilesID[aFileID])
+        aList.push({ title: aFile.title.substring(0, 10), content: aFile.filepath, tag: aFile.tag.substring(0, 5) });
+    }
+    return aList;
+}
+
+//ฟังชันใช้ในหน้า profile - โพสตัวเอง(uid) ที่เคยโพสไว้
+export async function ProfilefeedPostList(uID) {
+    const user = await getUserByID(uID)
+    const PostsID = user.postID
+    var aList = [];
+
+    for (var aPostID in PostsID) {
+        var Post = await getPostByID(PostsID[aPostID])
+        console.log(Post)
+        aList.push({ id: Post.postID, title: Post.title.substring(0, 10), location: Post.location, tag: Post.tag.substring(0, 5), datetime: Post.timeDate, description: Post.describ, contact: Post.con });
+    }
+    return aList;
+}
+
+//ฟังชันใช้ในหน้า profile - โพสคนอื่นที่กด join ไว้
+export async function JoinedProfilefeedPostList(uID) {
+    const Posts = await getPost()
+    var d = [];
+
+    Posts.forEach(Post => {
+        d.push(Post)
+    });
+
+    var join = [];
+    for (var aPost in d) {
+        var PostuID = await d[aPost].data().uID
+        var joinedID = await d[aPost].data().joinedID
+
+        if (joinedID.includes(uID) && PostuID != uID) {
+            join.push(d[aPost].data())
+        }
+    }
+
+    var aList = []
+
+    for (var Postindex in join) {
+        var Post = join[Postindex]
+        console.log(Post)
+        aList.push({ id: Post.postID, title: Post.title.substring(0, 10), location: Post.location, tag: Post.tag.substring(0, 5), datetime: Post.timeDate, description: Post.describ, contact: Post.con });
+    }
+    return aList;
+}
+
+//ฟังชันใช้ในหน้า profile - join โพสคนอื่นที่
+export async function joinPost(uID, postID) {
+
+    const userdocRef = await getUserDocByID(uID);
+    await updateDoc(userdocRef, {
+        postID: await arrayUnion(postID),
+    });
+
+    const postdocRef = await getPostDocByPostID(postID);
+    await updateDoc(postdocRef, {
+        joinedID: await arrayUnion(uID),
+    });
+}
+
+//2024-04-20T13:54
+export async function timeLeft(postID) {
+    const nowdate = new Date()
+    const Postref = await getPostDocByPostID(postID);
+    var Post = await getDoc(Postref)
+    var postdate = new Date(Post.data().timeDate)
+    console.log("time: ", postdate)
+    console.log("nowdate: ", nowdate)
+
+
+    const secDiff = (postdate.getTime() - nowdate.getTime()) / 1000;
+    console.log(secDiff)
+    if (secDiff > 86400) { return (String(Math.floor(secDiff / 86400)) + "D") }
+    else if (secDiff > 3600) { return (String(Math.floor(secDiff / 3600)) + "H") }
+    else if (secDiff > 60) { return (String(Math.floor(secDiff / 60)) + "m") }
+    else if (secDiff > 0) { return (String(Math.floor(secDiff)) + "s") }
+    else { return (String(Math.floor((secDiff * (-1)) / 60)) + "m ago..") }
+
+
+
+}
+
+
+//YYYY-MM-DDTHH:mm:ss.sssZ
+async function delPost() {
+    const nowdate = new Date()
+    const Posts = await getPost();
+
+    Posts.forEach(async Post => {
+        const time = Post.data().timeDate
+        const postdate = new Date(time)
+        if (postdate.getTime() - nowdate.getTime() < 3600 * 1000 * 2) {
+            await delPostId(Post.data().postID)
+            await deleteDoc(Post.ref);
+        }
+    }
+    )
+}
+
+async function delPostId(apostID) {
+    const data = await getUser()
+    data.forEach(async user => {
+        const userDoc = await getUserDocByID(user.data().id)
+
+        await updateDoc(userDoc, {
+            "postID": await arrayRemove(apostID),
+        });
+    })
+}
+
+delPost()
+

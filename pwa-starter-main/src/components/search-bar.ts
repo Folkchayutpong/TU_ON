@@ -1,7 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 
-
 @customElement('search-bar')
 export class SearchBar extends LitElement {
 
@@ -67,7 +66,8 @@ export class SearchBar extends LitElement {
   search(event: Event) {
     event.preventDefault();
     const searchInput = (this.shadowRoot!.getElementById('searchBar') as HTMLInputElement).value;
-    this.dispatchEvent(new CustomEvent('search', { detail: searchInput }));
+    const upperSearch = searchInput.toUpperCase();
+    this.dispatchEvent(new CustomEvent('search', { detail: upperSearch }));
   }
 }
 

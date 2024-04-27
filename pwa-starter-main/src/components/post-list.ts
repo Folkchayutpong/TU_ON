@@ -1,9 +1,13 @@
 import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-// import { getFileDownloadURL, feedDataList } from "../index";
+import { feedPostList, joinPost, } from '../index'
+import { getData } from './header';
+
 
 @customElement('post-list')
 export class PostList extends LitElement {
+  @property({ type: String }) uID: string = '';
+  @property({ type: Boolean }) joined: boolean = false;
 
   static styles = css`
     div {
@@ -77,37 +81,62 @@ export class PostList extends LitElement {
     }
   `;
 
-  @property({ type: Array }) postList: any[] = [{ id:'12', title: 'Title 1', location: 'Location 1', tag: 'CN101', datetime: '2024-04-26T23:00', description: 'lolem is som', contact: '+66654966' },{ id:'22', title: 'Title 2', location: 'Location 2', tag: 'CN102', datetime: '2024-04-26T23:00', description: 'lolem is som', contact: '+66654966' }];
-  // @property({ type: Array }) postList: any[] = [];
-  // async getPost(): Promise<any[]> {
-  //   try {
-  //     const d = await postDataList(true);
-  //     return d;
-  //   } catch (error) {
-  //     console.error("Error fetching user data:", error);
-  //     return [];
-  //   }
-  // }
+  @property({ type: Array }) postList: any[] = [];
+  @property({ type: String }) tag: string = "";
 
+  search(event: CustomEvent) {
+    try {
+      const searchValue = event.detail;
+      this.tag = searchValue;
+      console.log("from search: ", this.tag)
+      this.getFeed();
+    } catch (error) {
+      console.log(error)
+    }
+  };
 
-  // connectedCallback() {
-  //   super.connectedCallback();
-  //   this.getPost().then(data => {
-  //     this.postList = data || [];
-  //   });
-  // }
+  async getFeed(): Promise<any[]> {
+    try {
+      const d = await feedPostList(this.tag);
+      this.postList = d.filter(feed => feed.tag.toLowerCase().includes(this.tag.toLowerCase()));
+      return this.postList;
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      return [];
+    }
+  }
 
+  async connectedCallback() {
+    super.connectedCallback();
+    try {
+      this.getFeed().then(data => {
+        this.postList = data || [];
+      });
+      const data = await getData();
+      this.uID = data.id || "undefined";
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
   render() {
     return this.mapPostList(this.postList);
   }
 
   mapPostList(postList: any[]) {
+    if (this.postList.length == 0) {
+      return html`
+          <div>
+            <search-bar @search=${this.search}></search-bar>
+          </div>
+        `;
+    };
     return postList.map((post) => {
       return html`
         <div>
         <div class="flex">
           <img src="/assets/icons/192-192.png" alt="logo" width="100" height="100">
+          <search-bar @search=${this.search}></search-bar>
           <span class="content">
             <h2>${post.title}</h2>
             <p>${post.location}</p>
@@ -137,7 +166,7 @@ export class PostList extends LitElement {
             </div>
             <form class="end" @submit=${this.join}>
                 <input type="hidden" name="post" value="${post.id}">
-                <input type="submit" value="Join">
+                <input type="submit" value=${this.joined ? 'Joined' : 'Join'}>
             </form>
           </span>
         </div>
@@ -145,6 +174,11 @@ export class PostList extends LitElement {
     });
   }
 
-  join(e: any) {
+
+  join(e: Event) {
+    e.preventDefault();
+    const postID = (e.target as HTMLFormElement).post.value;
+    joinPost(this.uID, postID)
+    this.joined = true;
   }
 }

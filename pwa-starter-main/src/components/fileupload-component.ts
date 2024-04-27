@@ -1,25 +1,24 @@
 import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-import { addFile, getFileByID, updateFileID } from "../index";
+import { addFile} from "../index";
 import { getData } from './header';
 
 @customElement('file-component')
 export class FileComponent extends LitElement {
 
   @property({ type: String }) uID: string = '';
-  @property({ type: String }) fileID: string = '';
+  @property({ type: String }) afileID: string = '';
 
   async connectedCallback() {
     super.connectedCallback();
     try {
       const data = await getData();
       this.uID = data.id || "undefined";
-      const fileData = await getFileByID(this.uID);
-      this.fileID = fileData.fileID || "undefined";
     } catch (error) {
       console.error('Error:', error);
     }
   }
+
 
   static styles = css`
     /* Add your styles here */
@@ -159,7 +158,6 @@ export class FileComponent extends LitElement {
       </form>
     `;
   }
-
   async post(event: Event) {
     event.preventDefault();
     const topicInput = this.shadowRoot!.getElementById('topic') as HTMLInputElement;
@@ -184,9 +182,10 @@ export class FileComponent extends LitElement {
         const docRef = await addFile(file, type, subject, topic, this.uID);
         console.log("isMid: ", type)
         console.log("uID: ", this.uID);
-        console.log("fileID: ", this.fileID);
-        await updateFileID(this.uID, this.fileID);
+        console.log("fileID: ", this.afileID);
+        //await updateFileID(this.uID, this.afileID);
         window.location.href = '/home';
+        return;
       } else {
         throw new Error('Please select a file.');
       }
@@ -195,4 +194,5 @@ export class FileComponent extends LitElement {
       alert('Post failed. Please try again.');
     }
   }
+
 }

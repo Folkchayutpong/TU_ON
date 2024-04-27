@@ -32,7 +32,6 @@ export class FeedList extends LitElement {
     img {
       border-radius: 40px;
       margin: 6px;
-      background-color: orange;
       align-self: center;
     }
 
@@ -104,6 +103,13 @@ export class FeedList extends LitElement {
     return this.mapFeedList(this.feedList);
   }
   mapFeedList(feedList: any[]) {
+    if (this.feedList.length == 0) {
+      return html`
+          <div>
+            <search-bar @search=${this.search}></search-bar>
+          </div>
+        `;
+    };
     return feedList.map((feed) => {
       return html`
           <div>

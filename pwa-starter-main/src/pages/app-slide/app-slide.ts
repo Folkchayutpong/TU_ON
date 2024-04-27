@@ -25,6 +25,7 @@ export class AppSlide extends LitElement {
 
       main {
         margin-top: 80px;
+        padding-bottom: 80px;
       }
     `
   ]

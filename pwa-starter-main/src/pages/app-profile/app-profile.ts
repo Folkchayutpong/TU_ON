@@ -1,10 +1,10 @@
-import { LitElement, html } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 // import { getCookie, deleteCookie, url } from '../../utils/cookie-utils';
 
 // You can also import styles from another file
 // if you prefer to keep your CSS seperate from your component
-import { styles } from './profile-styles';
+// import { styles } from './profile-styles';
 
 import { styles as sharedStyles } from '../../styles/shared-styles'
 
@@ -16,7 +16,21 @@ export class AppProfile extends LitElement {
 
   static styles = [
     sharedStyles,
-    styles
+    css`
+      /* Add your styles here */
+      main {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+        margin-top: 150px;
+        align-items: center;
+        padding-bottom: 80px;
+      }
+      my-schedule {
+        width: 328px;
+      }
+    `
   ]
 
   async firstUpdated() {
@@ -45,23 +59,15 @@ export class AppProfile extends LitElement {
       <app-header ?enableBack="${true}"></app-header>
 
       <main>
-        <h2>About Page</h2>
 
-        <sl-card>
-          <h2>Did you know?</h2>
+        <my-schedule></my-schedule>
 
-          <p>PWAs have access to many useful APIs in modern browsers! These
-            APIs have enabled many new types of apps that can be built as PWAs, such as advanced graphics editing apps, games,
-            apps that use machine learning and more!
-          </p>
-
-          <p>Check out <a
-              href="https://docs.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/how-to/handle-files">these
-              docs</a> to learn more about the advanced features that you can use in your PWA</p>
-        </sl-card>
+        <div>
+          <h2 style="border-bottom: 2px solid var(--sl-color-neutral-1000);">My Post</h2>
+          <my-feed></my-feed>
+          <my-post></my-post>
+        </div>
       </main>
-
-      <logout-component></logout-component>
 
       <bottom-navigation activeTab="${this.activeTab}"></bottom-navigation>
     `;

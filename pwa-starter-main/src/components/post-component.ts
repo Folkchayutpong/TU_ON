@@ -129,7 +129,7 @@ export class PostComponent extends LitElement {
     `;
   }
 
-  post(event: Event) {
+  post() {
     // Add your code here
   }
 }

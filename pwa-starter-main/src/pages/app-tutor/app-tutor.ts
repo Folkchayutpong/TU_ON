@@ -25,6 +25,7 @@ export class AppTutor extends LitElement {
 
       main {
         margin-top: 80px;
+        padding-bottom: 80px;
       }
     `
   ]

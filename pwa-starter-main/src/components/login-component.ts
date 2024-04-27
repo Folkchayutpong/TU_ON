@@ -14,17 +14,68 @@ export class LoginComponent extends LitElement {
       gap: 8px;
       justify-content: center;
     }
+input {
+      background-color: #00000000;
+      border: none;
+      padding: 8px;
+      border-bottom: 1px solid #333;
+      text-indent: 25px;
+      margin-bottom: 15px;
+    }
+    input:focus {
+      outline: none;
+    }
+    div {
+      display:
+    }
+
+    label {
+      position: relative;
+    }
+
+    label.user:before {
+      content: "";
+      position: absolute;
+      left: 0px;
+      top: 0;
+      bottom: 0;
+      width: 24px;
+      background: url("/assets/fa/User_C.svg") no-repeat;
+    }
+    label.log:before {
+      content: "";
+      position: absolute;
+      left: 0px;
+      top: 0;
+      bottom: 0;
+      width: 24px;
+      background: url("/assets/fa/Log_S.svg") no-repeat;
+    }
+    button {
+      background-color: white;
+      width: 100px;
+      margin: 10px auto;
+      border: none;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: alias;
+    }
+
   `;
 
   render() {
     return html`
-      <form @submit=${this.login}>
-      <div>
+    <form @submit=${this.login}>
+    <div>
+      <label for="username" class="user">
         <input type="text" placeholder="Username" id="username" required>
+      </label>
+      <label for="password" class="log">
         <input type="password" placeholder="Password" id="password" required>
-        <button type="submit">Login</button>
-      </div>
-      </form>
+      </label>
+      <button type="submit">Login</button>
+    </div>
+    </form>
     `;
   }
 

@@ -70,6 +70,14 @@ export const router = new Router({
           lazy(() => import('./pages/app-profile/app-profile.js')),
         ],
         render: () => html`<app-profile></app-profile>`
+      },
+      {
+        path: resolveRouterPath('settings'),
+        title: 'Settings',
+        plugins: [
+          lazy(() => import('./pages/app-profile/app-setting.js')),
+        ],
+        render: () => html`<app-setting></app-setting>`
       }
     ]
   });

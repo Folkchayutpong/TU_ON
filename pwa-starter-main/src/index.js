@@ -445,7 +445,7 @@ export async function JoinedProfilefeedPostList(uID) {
         var PostuID = await d[aPost].data().uID
         var joinedID = await d[aPost].data().joinedID
 
-        if (joinedID.includes(uID) && PostuID != uID) {
+        if (joinedID.includes(uID)) { //&& PostuID != uID) {
             join.push(d[aPost].data())
         }
     }
@@ -455,10 +455,12 @@ export async function JoinedProfilefeedPostList(uID) {
     for (var Postindex in join) {
         var Post = join[Postindex]
         console.log(Post)
-        aList.push({ id: Post.postID, title: Post.title.substring(0, 10), location: Post.location, tag: Post.tag.substring(0, 5), datetime: Post.timeDate, description: Post.describ, contact: Post.con });
+        aList.push({ id: Post.postID, title: Post.title.substring(0, 10), location: Post.location, tag: Post.tag.substring(0, 5), datetime: Post.timeDate, description: Post.describ, contact: Post.con, time: await timeLeft(Post.postID) });
     }
     return aList;
 }
+
+
 
 //ฟังชันใช้ในหน้า profile - join โพสคนอื่นที่
 export async function joinPost(uID, postID) {
@@ -476,24 +478,25 @@ export async function joinPost(uID, postID) {
 
 //2024-04-20T13:54
 export async function timeLeft(postID) {
-    const nowdate = new Date()
+    const nowdate = new Date();
     const Postref = await getPostDocByPostID(postID);
-    var Post = await getDoc(Postref)
-    var postdate = new Date(Post.data().timeDate)
-    console.log("time: ", postdate)
-    console.log("nowdate: ", nowdate)
-
-
+    var Post = await getDoc(Postref);
+    var postdate = new Date(Post.data().timeDate);
+    console.log("time: ", postdate);
+    console.log("nowdate: ", nowdate);
     const secDiff = (postdate.getTime() - nowdate.getTime()) / 1000;
-    console.log(secDiff)
-    if (secDiff > 86400) { return (String(Math.floor(secDiff / 86400)) + "D") }
-    else if (secDiff > 3600) { return (String(Math.floor(secDiff / 3600)) + "H") }
-    else if (secDiff > 60) { return (String(Math.floor(secDiff / 60)) + "m") }
-    else if (secDiff > 0) { return (String(Math.floor(secDiff)) + "s") }
-    else { return (String(Math.floor((secDiff * (-1)) / 60)) + "m ago..") }
-
-
-
+    console.log(secDiff);
+    if (secDiff > 86400) {
+        return String(Math.floor(secDiff / 86400)) + " Day" + (Math.floor(secDiff / 86400) === 1 ? "" : "s");
+    } else if (secDiff > 3600) {
+        return String(Math.floor(secDiff / 3600)) + " Hour" + (Math.floor(secDiff / 3600) === 1 ? "" : "s");
+    } else if (secDiff > 60) {
+        return String(Math.floor(secDiff / 60)) + " Minute" + (Math.floor(secDiff / 60) === 1 ? "" : "s");
+    } else if (secDiff > 0) {
+        return String(Math.floor(secDiff)) + " Second" + (Math.floor(secDiff) === 1 ? "" : "s");
+    } else {
+        return String(Math.floor((secDiff * (-1)) / 60)) + " Minute" + (Math.floor((secDiff * (-1)) / 60) === 1 ? "" : "s") + " Ago";
+    }
 }
 
 

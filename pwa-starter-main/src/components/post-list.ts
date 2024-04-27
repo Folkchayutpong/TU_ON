@@ -7,7 +7,6 @@ import { getData } from './header';
 @customElement('post-list')
 export class PostList extends LitElement {
   @property({ type: String }) uID: string = '';
-  @property({ type: Boolean }) joined: boolean = false;
 
   static styles = css`
     div {
@@ -164,9 +163,9 @@ export class PostList extends LitElement {
                 <h5>ติดต่อ:</h5>
                 <p>${post.contact}</p> <br>
             </div>
-            <form class="end" @submit=${this.join}>
+            <form class="end" @submit=${(e: Event) => this.join(e, post)}>
                 <input type="hidden" name="post" value="${post.id}">
-                <input type="submit" value=${this.joined ? 'Joined' : 'Join'}>
+                <input type="submit" value=${post.joined ? 'Joined' : 'Join'}>
             </form>
           </span>
         </div>
@@ -175,10 +174,11 @@ export class PostList extends LitElement {
   }
 
 
-  join(e: Event) {
+  join(e: Event, post: any) {
     e.preventDefault();
     const postID = (e.target as HTMLFormElement).post.value;
-    joinPost(this.uID, postID)
-    this.joined = true;
+    joinPost(this.uID, postID);
+    post.joined = true;
+    this.requestUpdate();
   }
 }

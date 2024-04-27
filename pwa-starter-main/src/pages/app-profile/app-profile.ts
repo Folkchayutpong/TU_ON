@@ -1,5 +1,7 @@
+//app-profile.ts
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
+import { resolveRouterPath } from '../../router';
 // import { getCookie, deleteCookie, url } from '../../utils/cookie-utils';
 
 // You can also import styles from another file
@@ -27,12 +29,26 @@ export class AppProfile extends LitElement {
         align-items: center;
         padding-bottom: 80px;
       }
+
+      .settings-icon {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+        }
+
       my-schedule {
         width: 328px;
       }
       app-header {
         z-index: 1;
         position: relative;
+      }
+      .settings {
+        position: fixed;
+        right: 0;
+        top: 0;
+        padding: 16px;
+        z-index: 2;
       }
     `
   ]
@@ -61,6 +77,11 @@ export class AppProfile extends LitElement {
   render() {
     return html`
       <app-header></app-header>
+      <div class="settings">
+        <a href="${resolveRouterPath('settings')}">
+          <img src="/assets/fa/Set.svg" alt="settings" width="24" height="24">
+        </a>
+      </div>
 
       <main>
 
@@ -70,6 +91,7 @@ export class AppProfile extends LitElement {
           <h2 style="border-bottom: 2px solid var(--sl-color-neutral-1000);">My Post</h2>
           <my-feed></my-feed>
           <my-post></my-post>
+          <setting></setting>
         </div>
       </main>
 

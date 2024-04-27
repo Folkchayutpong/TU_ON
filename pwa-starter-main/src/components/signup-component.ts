@@ -14,19 +14,82 @@ export class SignupComponent extends LitElement {
       gap: 8px;
       justify-content: center;
     }
+    input {
+      background-color: #00000000;
+      border: none;
+      padding: 8px;
+      border-bottom: 1px solid #333;
+      text-indent: 25px;
+      margin-bottom: 15px;
+    }
+    input:focus {
+      outline: none;
+    }
+    div {
+      display:
+    }
+
+    label {
+      position: relative;
+    }
+
+    label.user:before {
+      content: "";
+      position: absolute;
+      left: 0px;
+      top: 0;
+      bottom: 0;
+      width: 24px;
+      background: url("/assets/fa/User_C.svg") no-repeat;
+    }
+    label.log:before {
+      content: "";
+      position: absolute;
+      left: 0px;
+      top: 0;
+      bottom: 0;
+      width: 24px;
+      background: url("/assets/fa/Log_S.svg") no-repeat;
+    }
+    label.at:before {
+      content: "";
+      position: absolute;
+      left: 0px;
+      top: 0;
+      bottom: 0;
+      width: 24px;
+      background: url("/assets/fa/sign-at.svg") no-repeat;
+    }
+    button {
+      background-color: white;
+      width: 100px;
+      margin: 10px auto;
+      border: none;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: alias;
+    }
   `;
 
   render() {
     return html`
-      <form @submit=${this.signup}>
-        <div>
-          <input type="text" placeholder="Username" id="username" required>
-          <input type="password" placeholder="Password" id="password" required>
-          <input type="name" placeholder="Display Name" id="name" required>
-          <input type="faculty" placeholder="Faculty" id="faculty" required>
-          <button type="submit">Signup</button>
-        </div>
-      </form>
+    <form @submit=${this.signup}>
+    <div>
+      <label for="username" class="user">
+        <input type="text" placeholder="Username" id="username" required>
+      </label>
+      <label for="password" class="log">
+        <input type="password" placeholder="Password" id="password" required>
+      </label>
+      <label for="username" class="user">
+        <input type="name" placeholder="Display Name" id="name" required>
+      </label>
+      <label for="faculty" class="at">
+        <input type="faculty" placeholder="Faculty" id="faculty" required>
+      </label>
+      <button type="submit">Signup</button>
+    </div>
+    </form>
     `;
   }
   //อยากให้ encrypt และตรวจสอบว่า user ซ้ำมั้ย?

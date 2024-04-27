@@ -1,10 +1,10 @@
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-import { getCollUser } from '../index';
+import { getCollUser, JoinedProfilefeedPostList, timeLeft } from '../index';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 
-export async function getData(): Promise<any> {
+export async function getUser(): Promise<any> {
     try {
         let d = getCollUser(String(document.cookie));
         return await d;
@@ -14,18 +14,32 @@ export async function getData(): Promise<any> {
     }
 }
 
+export async function getData(uID: string): Promise<any> {
+    try {
+        let d = await JoinedProfilefeedPostList(uID);
+        return d;
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+        return {};
+    }
+}
+
+
+
 @customElement('my-schedule')
 export class Schedule extends LitElement {
     @property({ type: String }) name = 'demo';
     @property({ type: Number }) numDay = 3;
     @property({ type: String }) uID = 'demo';
+    @property({ type: Array }) joinedList: any[] = [];
 
-    connectedCallback() {
+    async connectedCallback() {
         super.connectedCallback();
-        getData().then(data => {
+        await getUser().then(data => {
             this.name = data["name"] || "undefined";
             this.uID = data["id"] || "undefined";
         });
+        this.joinedList = await getData(this.uID);
     }
 
     static styles = css`
@@ -69,27 +83,38 @@ export class Schedule extends LitElement {
         height: 50px;
         margin-top: -54px;
         margin-left: 20px;
+        font-weight: bold;
         padding: 0;
         background-color: #C2E2F5;
         position: relative;
         justify-content: center;
+
     }
 
   `;
 
     render() {
+        let d = this.joinedList;
+        return this.joinedFeedList(d);
+    }
+
+    joinedFeedList(list: any[]) {
         return html`
-    <h2>${this.name}'s Schedule</h2>
-    <div>
-        <span>
-            <img src="/assets/icons/192-192.png" alt="profile">
-            <div class="numjoin">
-                <h3>${this.numDay}</h3>
+        <h2>${this.name}'s Schedule</h2>
+        ${(list.map((alist) => html`
+            <div>
+                <span>
+                <img src="/assets/icons/192-192.png" alt="profile">
+                    <div class="numjoin">
+                        <h5>${alist.tag}</h5>
+                    </div>
+                </span>
+                <span><p>Start in ${alist.time}</p></span>
+                <span><p class="bold">Joined</p></span>
             </div>
-        </span>
-        <span><p>Start in ${this.numDay} Day...</p></span>
-        <span><p class="bold">Joined</p></span>
-    </div>
+        `))
+            }
     `;
     }
+
 }

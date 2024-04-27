@@ -18,13 +18,25 @@ export class AppLogin extends LitElement {
   static styles = [
     sharedStyles,
     css`
-      sl-card {
+    main {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+        margin-top: 150px;
+        align-items: center;
+        padding-bottom: 80px;
+      }
+    login-component {
         justify-content: center;
         align-items: center;
         display: flex;
         flex-direction: column;
         gap: 8px;
         padding: 16px;
+      }
+    h1 {
+        text-align: center;
       }
     `
   ]
@@ -44,13 +56,8 @@ export class AppLogin extends LitElement {
     return html`
       <main>
         <h1>Login</h1>
-        <sl-card>
           <login-component></login-component>
-        </sl-card>
-        <br>
-        <sl-card>
-            <a href="${resolveRouterPath('signup')}">Sign Up</a>
-        </sl-card>
+          <p>Don't have an account yet? <a href="${resolveRouterPath('signup')}">Sign Up</a></p>
       </main>
     `;
   }

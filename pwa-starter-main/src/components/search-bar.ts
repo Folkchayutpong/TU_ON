@@ -70,3 +70,7 @@ export class SearchBar extends LitElement {
     this.dispatchEvent(new CustomEvent('search', { detail: searchInput }));
   }
 }
+
+
+
+

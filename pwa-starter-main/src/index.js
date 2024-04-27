@@ -325,12 +325,6 @@ export async function getFileDownloadURL(fromUser) {
     return url;
 }
 
-
-//ShowTutor
-export async function showTutor() {
-
-}
-
 export async function updateFileID(userID, newfileID) {
     try {
         const docRef = await getUserDocByID(userID);

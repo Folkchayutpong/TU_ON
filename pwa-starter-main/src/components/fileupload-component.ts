@@ -140,11 +140,11 @@ export class FileComponent extends LitElement {
           <td class="line">
             <label for="type">ประเภท:  </label>
             <span>
-              <input type="radio" id="ismid" name="type" value="true" checked>
+              <input type="radio" id="ismid" name="type" value="MID" checked>
               <label for="mid">Midterm</label>
             </span>
             <span>
-              <input type="radio" id="ismid" name="type" value="false" >
+              <input type="radio" id="isfin" name="type" value="Final" >
               <label for="fin">Final</label>
             </span>
           </td>
@@ -166,21 +166,27 @@ export class FileComponent extends LitElement {
     const subjectInput = this.shadowRoot!.getElementById('subject') as HTMLInputElement;
     const fileInput = this.shadowRoot!.getElementById('file') as HTMLInputElement;
     const ismid = this.shadowRoot!.getElementById('ismid') as HTMLInputElement;
+    const isfin = this.shadowRoot!.getElementById('isfin') as HTMLInputElement;
 
     const topic = topicInput.value;
     const subject = subjectInput.value;
     const file = fileInput.files;
-    const type = ismid.checked;
+    let type = '';
 
+    if (ismid.checked) {
+      type = ismid.value;
+    } else {
+      type = isfin.value;
+    }
 
     try {
       if (file) {
-        // const docRef = await addFile(file, type, subject, topic, this.uID);
+        const docRef = await addFile(file, type, subject, topic, this.uID);
         console.log("isMid: ", type)
         console.log("uID: ", this.uID);
         console.log("fileID: ", this.fileID);
         await updateFileID(this.uID, this.fileID);
-        // window.location.href = '/home';
+        window.location.href = '/home';
       } else {
         throw new Error('Please select a file.');
       }

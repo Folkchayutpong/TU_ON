@@ -14,6 +14,7 @@ async function getMidFin() {
   }
 }
 
+
 @customElement('feed-list')
 export class FeedList extends LitElement {
 
@@ -69,10 +70,23 @@ export class FeedList extends LitElement {
   @property({ type: Array }) feedList: any[] = [];
   @property({ type: String }) tag: string = "";
 
+
+  search(event: CustomEvent) {
+    try {
+      const searchValue = event.detail;
+      this.tag = searchValue;
+      console.log("from search: ", this.tag)
+      this.getFeed();
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
   async getFeed(): Promise<any[]> {
     try {
       const d = await feedDataList(await getMidFin(), this.tag);
-      return d;
+      this.feedList = d.filter(feed => feed.tag.toLowerCase().includes(this.tag.toLowerCase()));
+      return this.feedList;
     } catch (error) {
       console.error("Error fetching user data:", error);
       return [];
@@ -94,7 +108,7 @@ export class FeedList extends LitElement {
       return html`
           <div>
             <img src="/assets/icons/192-192.png" alt="logo" width="100" height="100">
-            <search-bar @search=${this.handleSearch} value=></search-bar>
+            <search-bar @search=${this.search}></search-bar>
             <span class="content">
               <h2>${feed.title}</h2>
               <p>Tag: #${feed.tag}</p>
@@ -111,7 +125,7 @@ export class FeedList extends LitElement {
   }
 
   async download(event: Event) {
-    event.preventDefault(); // ป้องกันการส่งค่าโดยไม่ได้รับอนุญาต
+    event.preventDefault();
     const feedContent = (event.target as HTMLFormElement).content.value;
     const url = await getFileDownloadURL(feedContent);
     const link = document.createElement('a');
@@ -121,19 +135,8 @@ export class FeedList extends LitElement {
     link.click();
   }
 
-  handleSearch(event: CustomEvent) {
-    try {
-      const searchInput = (event.target as HTMLInputElement).value;
-      this.tag = String(searchInput);
-      console.log("tag: " + this.tag)
-      console.log("isMid: ", getMidFin())
-
-    } catch (error) {
-      return (error)
-    }
-
-  }
-
 }
+
+
 
 

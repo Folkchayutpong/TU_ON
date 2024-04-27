@@ -1,6 +1,18 @@
 import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 import { getFileDownloadURL, feedDataList } from "../index";
+import { MidFin } from './mid-fin';
+
+const midFin = new MidFin();
+async function getMidFin() {
+  var aState = midFin.activeTab
+  if (aState == 'mid') {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
 
 @customElement('feed-list')
 export class FeedList extends LitElement {
@@ -40,7 +52,7 @@ export class FeedList extends LitElement {
       align-self: flex-end;
     }
 
-    input[type="submit"] {
+    button {
       margin: 9px 0;
       padding: 5px 5px;
       width: 50px;
@@ -49,12 +61,17 @@ export class FeedList extends LitElement {
       background-color: #C2E2F599;
       border: none;
     }
+    button img {
+      margin: 0;
+    }
   `;
 
   @property({ type: Array }) feedList: any[] = [];
+  @property({ type: String }) tag: string = "";
+
   async getFeed(): Promise<any[]> {
     try {
-      const d = await feedDataList(true);
+      const d = await feedDataList(await getMidFin(), this.tag);
       return d;
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -69,29 +86,27 @@ export class FeedList extends LitElement {
     });
   }
 
-
-
   render() {
     return this.mapFeedList(this.feedList);
   }
-
   mapFeedList(feedList: any[]) {
     return feedList.map((feed) => {
       return html`
-      <div>
-      <img src="/assets/icons/192-192.png" alt="logo" width="100" height="100">
-      <span class="content">
-        <h2>${feed.title}</h2>
-        <p>Tag: #${feed.tag}</p>
-      </span>
-      <span class="download">
-      <form @submit=${this.download}>
-        <input type="hidden" name="content" value="${feed.content}">
-        <input type="submit" value="1">
-      </form>
-      </span>
-    </div>
-      `;
+          <div>
+            <img src="/assets/icons/192-192.png" alt="logo" width="100" height="100">
+            <search-bar @search=${this.handleSearch} value=></search-bar>
+            <span class="content">
+              <h2>${feed.title}</h2>
+              <p>Tag: #${feed.tag}</p>
+            </span>
+            <span class="download">
+              <form @submit=${this.download}>
+                <input type="hidden" name="content" value="${feed.content}">
+                <button type="submit" value="1"><img src="/assets/fa/Download.svg"></button>
+              </form>
+            </span>
+          </div>
+        `;
     });
   }
 
@@ -99,14 +114,26 @@ export class FeedList extends LitElement {
     event.preventDefault(); // ป้องกันการส่งค่าโดยไม่ได้รับอนุญาต
     const feedContent = (event.target as HTMLFormElement).content.value;
     const url = await getFileDownloadURL(feedContent);
-    console.log(url)
-
-    // สร้างลิงก์ดาวน์โหลด
     const link = document.createElement('a');
-    link.href = url;
-    link.download = url;
+    link.setAttribute('href', url);
+    link.style.display = "none";
     document.body.appendChild(link);
     link.click();
   }
 
+  handleSearch(event: CustomEvent) {
+    try {
+      const searchInput = (event.target as HTMLInputElement).value;
+      this.tag = String(searchInput);
+      console.log("tag: " + this.tag)
+      console.log("isMid: ", getMidFin())
+
+    } catch (error) {
+      return (error)
+    }
+
+  }
+
 }
+
+

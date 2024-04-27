@@ -1,9 +1,25 @@
 import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-import { addFile } from "../index"
+import { addFile, getFileByID, updateFileID } from "../index";
+import { getData } from './header';
 
 @customElement('file-component')
-export class fileComponent extends LitElement {
+export class FileComponent extends LitElement {
+
+  @property({ type: String }) uID: string = '';
+  @property({ type: String }) fileID: string = '';
+
+  async connectedCallback() {
+    super.connectedCallback();
+    try {
+      const data = await getData();
+      this.uID = data.id || "undefined";
+      const fileData = await getFileByID(this.uID);
+      this.fileID = fileData.fileID || "undefined";
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
   static styles = css`
     /* Add your styles here */
@@ -146,18 +162,28 @@ export class fileComponent extends LitElement {
 
   async post(event: Event) {
     event.preventDefault();
-    const topic = (this.shadowRoot!.getElementById('topic') as HTMLInputElement).value;
-    const subject = (this.shadowRoot!.getElementById('subject') as HTMLInputElement).value;
-    const file = (this.shadowRoot!.getElementById('file') as HTMLInputElement).files;
-    const ismid = (this.shadowRoot!.getElementById('ismid') as HTMLInputElement).value;
+    const topicInput = this.shadowRoot!.getElementById('topic') as HTMLInputElement;
+    const subjectInput = this.shadowRoot!.getElementById('subject') as HTMLInputElement;
+    const fileInput = this.shadowRoot!.getElementById('file') as HTMLInputElement;
+    const ismid = this.shadowRoot!.getElementById('ismid') as HTMLInputElement;
+
+    const topic = topicInput.value;
+    const subject = subjectInput.value;
+    const file = fileInput.files;
+    const type = ismid.checked;
+
 
     try {
-
-      const docRef = await addFile(file, ismid, subject, topic, "uID");
-      console.log("Document ID:", docRef.uID);
-      window.location.href = '/home';
-      return;
-
+      if (file) {
+        // const docRef = await addFile(file, type, subject, topic, this.uID);
+        console.log("isMid: ", type)
+        console.log("uID: ", this.uID);
+        console.log("fileID: ", this.fileID);
+        await updateFileID(this.uID, this.fileID);
+        // window.location.href = '/home';
+      } else {
+        throw new Error('Please select a file.');
+      }
     } catch (error: any) {
       console.error('Post failed:', error.message);
       alert('Post failed. Please try again.');

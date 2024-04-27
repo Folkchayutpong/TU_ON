@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, doc, where, query } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js"
+import { getFirestore, collection, getDocs, addDoc, doc, where, query, updateDoc, arrayUnion, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js"
 import { getStorage, ref, uploadBytes, getBytes, getBlob, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
 //import { resolve } from "path";
 //import { json } from "stream/consumers";
@@ -52,7 +52,7 @@ export async function getFile() {
 
 };
 
-// ดึงข้อมูล Document ของ Users โดยใช้ id
+// ดึงข้อมูล data Document ของ Users โดยใช้ id
 export async function getUserByID(Id_user) {
     const data = await getUser()
     var d;
@@ -68,6 +68,24 @@ export async function getUserByID(Id_user) {
         throw e;
     }
 }
+
+// ดึงข้อมูล Document ของ Users โดยใช้ id
+export async function getUserDocByID(Id_user) {
+    const data = await getUser();
+    var d;
+    console.log(Id_user);
+    try {
+        data.forEach(aUser => {
+            if (aUser.data().id == Id_user) {
+                d = aUser.ref; // Change to reference
+            }
+        });
+        return d;
+    } catch (error) {
+        throw error;
+    }
+}
+
 
 // ดึงข้อมูล Document ของ Post โดยใช้ id
 export async function getPostByID(Id) {
@@ -85,13 +103,13 @@ export async function getPostByID(Id) {
     }
 }
 
-// ดึงข้อมูล Document ของ File โดยใช้ id
+// ดึงข้อมูล data Document ของ File โดยใช้ id
 export async function getFileByID(Id) {
     const data = await getFile()
     var d;
     try {
         data.forEach(aFile => {
-            if (aFile.data().id == Id) {
+            if (aFile.data().uID == Id) {
                 d = aFile
             }
         });
@@ -100,6 +118,7 @@ export async function getFileByID(Id) {
         throw e;
     }
 }
+
 
 //
 export async function getCollUser(Id) {
@@ -147,7 +166,7 @@ export async function getCollFile(Id) {
     }
 }
 
-//ดึงข้อมูล Document ของ Users โดขใช้ username
+//ดึงข้อมูล data Document ของ Users โดขใช้ username
 export async function getUserByUsername(userVal) {
     const data = await getUser()
     var d;
@@ -162,6 +181,8 @@ export async function getUserByUsername(userVal) {
         throw e;
     }
 }
+
+
 
 // นำเข้าข้อมูล user
 export async function addData(userVal, passVal, nameVal, facultyVal) {
@@ -210,21 +231,33 @@ export function decryptText(encrypted) {
 // นำเข้าข้อมูล file
 export async function addFile(file, isMid, tag, title, uID) {
     try {
-        const afileRef = ref(storage, 'file/' + file);
-        const meatadata = {
-            contentType: "application/pdf",
+        file = file[0]
+
+        var pdfFileRef = await ref(storage, 'file/' + file.name);
+        var i
+
+        for (i = 0; i >= 0; i++) {
+            try {
+                var testing = await getDownloadURL(pdfFileRef);
+                var pdfFileRef = await ref(storage, 'file/' + String(i) + "_" + file.name);
+            } catch (error) {
+                i = -99
+            }
         }
 
-        await uploadBytes(afileRef).then((snapshot) => {
-            console.log('Uploaded a file!');
+        await uploadBytes(pdfFileRef, file).then((snapshot) => {
+            console.log('Uploaded a PDF file!');
+        }).catch((error) => {
+            console.error('Error uploading PDF file:', error);
         });
 
-        const downloadURL = await getDownloadURL(afileRef); // ดึง URL ของไฟล์ที่อัพโหลด
+        const downloadURL = await getDownloadURL(pdfFileRef); // ดึง URL ของไฟล์ที่อัพโหลด
+
         const docRef = await addDoc(collection(db, 'File'), {
             fileID: uuidv4(),
             filepath: downloadURL, // ใช้ URL ของไฟล์แทน
-            isMid: Boolean(isMid),
-            tag: String(tag),
+            isMid: Boolean(isMid == "MID"),
+            tag: String(tag).toUpperCase(),
             title: String(title),
             uID: String(uID) // cookie ติดต่อเอาไอดีมาใส่ตรงนี้
         });
@@ -235,6 +268,7 @@ export async function addFile(file, isMid, tag, title, uID) {
         throw error;
     }
 }
+
 
 
 //นำเข้า post
@@ -260,31 +294,74 @@ export async function addPost(con, describ, tag, timeDate, title, uID, location)
 }
 
 //Feed Data อยู่หน้า mid เป็น true
-export async function feedDataList(isMid, tag = "") {
-    const Files = await getFile()
-    var aList = []
+export async function feedDataList(isMid, tag) {
+    const Files = await getFile();
+    var aList = [];
 
     try {
         Files.forEach(aFile => {
             if (aFile.data().isMid == isMid) {
-                if (aFile.data().tag == tag) {
-                    aList.push({ title: aFile.data().title, content: aFile.data().filepath, tag: aFile.data().tag })
+                const title = aFile.data().title.substring(0, 10);
+                const tagLimited = aFile.data().tag.substring(0, 5);
+                if (aFile.data().tag == tagLimited) {
+                    aList.push({ title, content: aFile.data().filepath, tag: tagLimited });
                 }
                 else if (tag == "") {
-                    aList.push({ title: aFile.data().title, content: aFile.data().filepath, tag: aFile.data().tag })
+                    aList.push({ title, content: aFile.data().filepath, tag: tagLimited });
                 }
             }
         });
-        return aList
+        return aList;
     } catch (e) {
         throw e;
     }
 }
 
 
-
+//getFileDownloadURL
 export async function getFileDownloadURL(fromUser) {
     const storageRef = ref(storage, fromUser);
     const url = await getDownloadURL(storageRef);
     return url;
+}
+
+
+//ShowTutor
+export async function showTutor() {
+
+}
+
+export async function updateFileID(userID, newfileID) {
+    try {
+        const docRef = await getUserDocByID(userID);
+        await updateDoc(docRef, {
+            fileID: arrayUnion(newfileID),
+        });
+    } catch (error) {
+        throw error;
+    }
+}
+
+//Feed Data อยู่หน้า mid เป็น true
+export async function feedTutorList(isMid, tag = "") {
+    const Posts = await getPost();
+    var aList = [];
+
+    try {
+        Posts.forEach(Post => {
+            if (Post.data().isMid == isMid) {
+                const title = Post.data().title.substring(0, 10);
+                const tagLimited = Post.data().tag.substring(0, 5);
+                if (Post.data().tag == tagLimited) {
+                    aList.push({ title, content: Post.data().filepath, tag: tagLimited });
+                }
+                else if (tag == "") {
+                    aList.push({ title, content: Post.data().filepath, tag: tagLimited });
+                }
+            }
+        });
+        return aList;
+    } catch (e) {
+        throw e;
+    }
 }

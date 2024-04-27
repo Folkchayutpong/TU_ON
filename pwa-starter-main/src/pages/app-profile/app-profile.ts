@@ -54,10 +54,6 @@ export class AppProfile extends LitElement {
             APIs have enabled many new types of apps that can be built as PWAs, such as advanced graphics editing apps, games,
             apps that use machine learning and more!
           </p>
-
-          <p>Check out <a
-              href="https://docs.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/how-to/handle-files">these
-              docs</a> to learn more about the advanced features that you can use in your PWA</p>
         </sl-card>
       </main>
 

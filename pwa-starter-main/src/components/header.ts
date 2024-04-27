@@ -1,11 +1,10 @@
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-import { getCookie } from '../utils/cookie-utils';
 // import '@shoelace-style/shoelace/dist/components/button/button.js';
-import { getCollUser, getUserByID } from '../index';
+import { getCollUser } from '../index';
 
 
-async function getData(): Promise<any> {
+export async function getData(): Promise<any> {
   try {
     let d = getCollUser(String(document.cookie));
     return await d;

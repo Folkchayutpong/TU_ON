@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 
+
 @customElement('search-bar')
 export class SearchBar extends LitElement {
 
@@ -53,7 +54,7 @@ export class SearchBar extends LitElement {
   `;
 
   render() {
-  return html`
+    return html`
     <div>
     <form @submit=${this.search}>
       <input type="text" name="search" id="searchBar" placeholder="Search..." />
@@ -63,6 +64,9 @@ export class SearchBar extends LitElement {
     `;
   }
 
-  search() {
+  search(event: Event) {
+    event.preventDefault();
+    const searchInput = (this.shadowRoot!.getElementById('searchBar') as HTMLInputElement).value;
+    this.dispatchEvent(new CustomEvent('search', { detail: searchInput }));
   }
 }

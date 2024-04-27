@@ -140,7 +140,7 @@ export class PostComponent extends LitElement {
     const subjectInput = (this.shadowRoot!.getElementById('subject') as HTMLInputElement).value;
     const contactInput = (this.shadowRoot!.getElementById('contact') as HTMLInputElement).value;
 
-    try {
+    try{
       const docRef = await addPost(contactInput, detailInput, subjectInput, dateInput, topicInput, "uID", locationInput);
       console.log("Document ID:", docRef.uID);
       window.location.href = '/home';

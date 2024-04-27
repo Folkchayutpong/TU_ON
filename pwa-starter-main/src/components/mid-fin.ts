@@ -1,10 +1,12 @@
 import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 
+
 @customElement('mid-fin')
 export class MidFin extends LitElement {
   @property({ type: String }) queryString: string = window.location.search;
   @property({ type: String }) activeTab: string = this.queryString.includes('time=fin') ? 'fin' : 'mid';
+
   static styles = css`
   /* Add your styles here */
   div {
@@ -62,6 +64,5 @@ export class MidFin extends LitElement {
   }
 
   toggle() {
-
   }
 }

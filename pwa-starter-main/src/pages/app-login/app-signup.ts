@@ -16,14 +16,26 @@ export class AppSignup extends LitElement {
   static styles = [
     sharedStyles,
     css`
-      sl-card {
-        justify-content: center;
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        padding: 16px;
-      }
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 16px;
+      margin-top: 150px;
+      align-items: center;
+      padding-bottom: 80px;
+    }
+  signup-component {
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px;
+    }
+  h1 {
+      text-align: center;
+    }
     `
   ]
 
@@ -36,9 +48,7 @@ export class AppSignup extends LitElement {
     return html`
       <main>
         <h1>Sign Up</h1>
-        <sl-card>
           <signup-component></signup-component>
-        </sl-card>
       </main>
     `;
   }

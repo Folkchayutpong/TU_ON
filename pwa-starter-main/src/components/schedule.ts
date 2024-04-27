@@ -5,10 +5,10 @@ import '@shoelace-style/shoelace/dist/components/button/button.js';
 
 @customElement('my-schedule')
 export class Schedule extends LitElement {
-  @property({ type: String }) username = 'demo';
-  @property({ type: Number }) numDay = 3;
+    @property({ type: String }) username = 'demo';
+    @property({ type: Number }) numDay = 0;
 
-  static styles = css`
+    static styles = css`
     h2 {
         text-align: flex-start;
         width: 100%;
@@ -57,10 +57,15 @@ export class Schedule extends LitElement {
 
   `;
 
-  render() {
-    return html`
-    <h2>${this.username}'s Schedule</h2>
-    <div>
+    render() {
+        return html`
+            <h2>${this.username}'s Schedule</h2>
+            ${this.renderSchedule()}
+        `;
+    }
+    renderSchedule() {
+        return html`
+        <div>
         <span>
             <img src="/assets/icons/192-192.png" alt="profile">
             <div class="numjoin">
@@ -69,7 +74,7 @@ export class Schedule extends LitElement {
         </span>
         <span><p>Start in ${this.numDay} Day...</p></span>
         <span><p class="bold">Joined</p></span>
-    </div>
+        </div>
     `;
-  }
+    }
 }

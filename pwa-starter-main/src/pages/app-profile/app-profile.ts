@@ -30,6 +30,10 @@ export class AppProfile extends LitElement {
       my-schedule {
         width: 328px;
       }
+      app-header {
+        z-index: 1;
+        position: relative;
+      }
     `
   ]
 
@@ -56,7 +60,7 @@ export class AppProfile extends LitElement {
 
   render() {
     return html`
-      <app-header ?enableBack="${true}"></app-header>
+      <app-header></app-header>
 
       <main>
 

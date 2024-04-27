@@ -225,7 +225,9 @@ export class MyFeedList extends LitElement {
               </tr>
               <tr>
               <td class="end">
-                <button type="submit">SAVE</button>
+                <input type="hidden" name="id" value="${feed.id}">
+                <button type="submit" name="action" value="save">SAVE</button>
+                <button type="submit" name="action" value="delete">DELETE</button>
               </td>
               </tr>
             </table>

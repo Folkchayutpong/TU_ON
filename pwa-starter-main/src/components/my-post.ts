@@ -97,10 +97,10 @@ export class MyPostList extends LitElement {
       width: 100px;
       height: 40px;
       margin: 10px 0;
+      margin-left: 10px;
 
       border-radius: 20px;
       box-shadow: 0 0 5px 0 #00000040;
-      margin: 9px 0;
       padding: 5px 5px;
       border-radius: 20px;
       background-color: #C2E2F599;
@@ -292,7 +292,9 @@ export class MyPostList extends LitElement {
               <tr>
               <tr>
               <td class="end">
-                <button type="submit">SAVE</button>
+                <input type="hidden" name="id" value="${post.id}">
+                <button type="submit" name="action" value="save">SAVE</button>
+                <button type="submit" name="action" value="delete">DELETE</button>
               </td>
               </tr>
             </table>

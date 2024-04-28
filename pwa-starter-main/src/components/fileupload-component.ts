@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-import { addFile} from "../index";
+import { addFile } from "../index";
 import { getData } from './header';
 
 @customElement('file-component')
@@ -167,7 +167,7 @@ export class FileComponent extends LitElement {
     const isfin = this.shadowRoot!.getElementById('isfin') as HTMLInputElement;
 
     const topic = topicInput.value;
-    const subject = subjectInput.value;
+    const subject = subjectInput.value.toUpperCase();
     const file = fileInput.files;
     let type = '';
 

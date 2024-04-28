@@ -86,6 +86,9 @@ export class PostComponent extends LitElement {
       border-radius: 20px;
       box-shadow: 0 0 5px 0 #00000040;
     }
+    .error-message {
+      color: red;
+    }
 
   `;
 
@@ -115,6 +118,7 @@ export class PostComponent extends LitElement {
           <td>
             <label for="date">วันที่/เวลา</label>
             <input type="datetime-local" id="date" value="${this.nowdate}" required>
+            <h7 id=error class="error-message"></h7>
           </td>
           </tr>
           <tr>
@@ -156,13 +160,21 @@ export class PostComponent extends LitElement {
     const contactInput = (this.shadowRoot!.getElementById('contact') as HTMLInputElement).value;
 
     try {
-      console.log("uID: ", this.uID);
-      const docRef = await addPost(contactInput, detailInput, subjectInput, dateInput, topicInput, this.uID, locationInput);
-      console.log("uID: ", this.uID);
-      console.log("postID: ", this.apostID);
-      window.location.href = '/home';
-      return;
-
+      const currentDate = new Date();
+      const inputDate = new Date(dateInput);
+      const errorElement = this.shadowRoot!.getElementById('error') as HTMLElement;
+      if (inputDate < currentDate) {
+        errorElement.textContent = 'Invalid date. Please choose a future date!';
+        return;
+      } else {
+        errorElement.textContent = '';
+        console.log("uID: ", this.uID);
+        const docRef = await addPost(contactInput, detailInput, subjectInput, dateInput, topicInput, this.uID, locationInput);
+        console.log("uID: ", this.uID);
+        console.log("postID: ", this.apostID);
+        window.location.href = '/home';
+        return;
+      }
     } catch (error: any) {
       console.error('Post failed:', error.message);
       alert('Post failed. Please try again.');

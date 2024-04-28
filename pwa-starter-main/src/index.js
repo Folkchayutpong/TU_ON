@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc, doc, where, query, updateDoc, arrayUnion, getDoc, deleteDoc, arrayRemove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js"
-import { getStorage, ref, uploadBytes, getBytes, getBlob, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
+import { getStorage, ref, uploadBytes, getBytes, getBlob, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
 //import { resolve } from "path";
 //import { json } from "stream/consumers";
 import { v4 as uuidv4 } from 'uuid';
@@ -129,6 +129,22 @@ export async function getFileByID(Id) {
     }
 }
 
+//getFileDocByID
+export async function getFileDocByID(Id) {
+    const data = await getFile()
+    var d;
+    try {
+        data.forEach(aFile => {
+            if (aFile.data().fileID == Id) {
+                d = aFile.ref
+            }
+        });
+        return d
+    } catch (e) {
+        throw e;
+    }
+}
+
 
 //
 export async function getCollUser(Id) {
@@ -244,12 +260,14 @@ export async function addFile(file, isMid, tag, title, uID) {
         file = file[0]
 
         var pdfFileRef = await ref(storage, 'file/' + file.name);
+        var reff = 'file/' + file.name
         var i
 
         for (i = 0; i >= 0; i++) {
             try {
                 var testing = await getDownloadURL(pdfFileRef);
                 var pdfFileRef = await ref(storage, 'file/' + String(i) + "_" + file.name);
+                reff = 'file/' + String(i) + "_" + file.name
             } catch (error) {
                 i = -99
             }
@@ -278,9 +296,10 @@ export async function addFile(file, isMid, tag, title, uID) {
             fileID: newFileID,
             filepath: downloadURL, // ใช้ URL ของไฟล์แทน
             isMid: Boolean(isMid == "MID"),
-            tag: String(tag).toUpperCase(),
+            tag: String(tag),
             title: String(title),
-            uID: String(uID) // cookie ติดต่อเอาไอดีมาใส่ตรงนี้
+            uID: String(uID), // cookie ติดต่อเอาไอดีมาใส่ตรงนี้
+            ref: String(reff)
         });
         console.log("Document successfully written!");
         return docRef; // คืนค่า DocumentReference
@@ -390,7 +409,7 @@ export async function feedPostList(tag) {
             const titleData = Post.data().title;
             const tagData = Post.data().tag;
             if (titleData && tagData) {
-                const title = titleData.substring(0, 20);
+                const title = titleData.substring(0, 25);
                 const tagLimited = tagData.substring(0, 5);
                 if (tagData == tagLimited) {
                     aList.push({ id: Post.data().postID, title: title, location: Post.data().location, tag: tagLimited, datetime: Post.data().timeDate, description: Post.data().describ, contact: Post.data().con });
@@ -412,7 +431,7 @@ export async function ProfilefeedDataList(uID) {
     var aList = [];
     for (var aFileID in FilesID) {
         var aFile = await getFileByID(FilesID[aFileID])
-        aList.push({ title: aFile.title.substring(0, 10), content: aFile.filepath, tag: aFile.tag.substring(0, 5) });
+        aList.push({ title: aFile.title.substring(0, 20), content: aFile.filepath, tag: aFile.tag.substring(0, 5), fileID: aFile.fileID });
     }
     return aList;
 }
@@ -426,7 +445,7 @@ export async function ProfilefeedPostList(uID) {
     for (var aPostID in PostsID) {
         var Post = await getPostByID(PostsID[aPostID])
         console.log(Post)
-        aList.push({ id: Post.postID, title: Post.title.substring(0, 10), location: Post.location, tag: Post.tag.substring(0, 5), datetime: Post.timeDate, description: Post.describ, contact: Post.con });
+        aList.push({ id: Post.postID, title: Post.title.substring(0, 25), location: Post.location, tag: Post.tag.substring(0, 5), datetime: Post.timeDate, description: Post.describ, contact: Post.con });
     }
     return aList;
 }
@@ -445,7 +464,7 @@ export async function JoinedProfilefeedPostList(uID) {
         var PostuID = await d[aPost].data().uID
         var joinedID = await d[aPost].data().joinedID
 
-        if (joinedID.includes(uID)) { //&& PostuID != uID) {
+        if (joinedID.includes(uID) && PostuID != uID) {
             join.push(d[aPost].data())
         }
     }
@@ -464,12 +483,6 @@ export async function JoinedProfilefeedPostList(uID) {
 
 //ฟังชันใช้ในหน้า profile - join โพสคนอื่นที่
 export async function joinPost(uID, postID) {
-
-    const userdocRef = await getUserDocByID(uID);
-    await updateDoc(userdocRef, {
-        postID: await arrayUnion(postID),
-    });
-
     const postdocRef = await getPostDocByPostID(postID);
     await updateDoc(postdocRef, {
         joinedID: await arrayUnion(uID),
@@ -525,6 +538,96 @@ async function delPostId(apostID) {
             "postID": await arrayRemove(apostID),
         });
     })
+}
+
+export async function updateFileData(fileID, aTopic, aSubject, ismid, fileInput, uID) {
+
+    var file = fileInput[0]
+
+    var pdfFileRef = await ref(storage, 'file/' + file.n);
+    var reff = 'file/' + file.name
+    var i
+
+    for (i = 0; i >= 0; i++) {
+        try {
+            var testing = await getDownloadURL(pdfFileRef);
+            var pdfFileRef = await ref(storage, 'file/' + String(i) + "_" + file.name);
+            reff = 'file/' + String(i) + "_" + file.name
+        } catch (error) {
+            i = -99
+        }
+    }
+
+    await uploadBytes(pdfFileRef, file).then((snapshot) => {
+        console.log('Uploaded a PDF file!');
+    }).catch((error) => {
+        console.error('Error uploading PDF file:', error);
+    });
+
+    //gen fileID
+    const newFileID = uuidv4()
+
+    //add fileID to Profile
+    const userdocRef = await getUserDocByID(uID);
+    await updateDoc(userdocRef, {
+        fileID: await arrayRemove(fileID), // ลบเก่า
+    });
+    await updateDoc(userdocRef, {
+        fileID: await arrayUnion(newFileID) // เพิ่มใหม่
+    });
+
+
+    // Delete the file
+    await deleteObject(ref(storage, (await getFileByID(fileID)).ref)).then(() => {
+        console.log('Del a PDF file!');
+    }).catch((error) => {
+        console.error('Error Del PDF file:', error);
+    });
+
+    //get dowloadURL
+    const downloadURL = await getDownloadURL(pdfFileRef); // ดึง URL ของไฟล์ที่อัพโหลด
+
+
+
+    //updateDoc file
+    const fileRef = await getFileDocByID(fileID); //
+    try {
+        await updateDoc(fileRef, {
+            fileID: String(newFileID),
+            filepath: String(downloadURL),
+            isMid: ismid == "Midterm",
+            title: String(aTopic),
+            tag: String(aSubject),
+            ref: String(reff)
+        });
+    } catch (e) {
+        console.log(e)
+    }
+
+
+};
+
+export async function updatePost(postID, topic, subject, detail, aLocation, contact, date) {
+    const postDocRef = await getPostDocByPostID(postID);
+    try {
+        console.log(postDocRef)
+        await updateDoc(postDocRef, {
+            con: String(contact),
+            describ: String(detail),
+            location: String(aLocation),
+            tag: String(subject),
+            timeDate: String(date),
+            title: String(topic),
+        })
+        window.location.href = "/profile";
+    } catch (e) {
+        console.log(e)
+    }
+
+}
+
+export async function getPicture(){
+    var user = getUserByID()
 }
 
 delPost()

@@ -1,13 +1,25 @@
 import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
-// import { getFileDownloadURL, feedDataList } from "../index";
+import { ProfilefeedPostList, getCollUser, updatePost } from "../index";
+
+export async function getData(): Promise<any> {
+  try {
+    let d = getCollUser(String(document.cookie));
+    return await d;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    return {};
+  }
+}
 
 @customElement('my-post')
 export class MyPostList extends LitElement {
 
-  @property({ type: String }) nowdate = new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Bangkok',
+  @property({ type: String }) nowdate = new Date().toLocaleString('sv-SE', {
+    timeZone: 'Asia/Bangkok',
     day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit'}).replace(' ', 'T').slice(0, 16);
+    hour: '2-digit', minute: '2-digit'
+  }).replace(' ', 'T').slice(0, 16);
 
   static styles = css`
     div {
@@ -179,29 +191,22 @@ export class MyPostList extends LitElement {
       table {
         width: 100%;
       }
+
+      .error-message {
+        color: red;
+      }
   `;
 
-  @property({ type: Array }) postList: any[] = [{ id:'12', title: 'Title 1', location: 'Location 1', tag: 'CN101', datetime: '2024-04-26T23:00', description: 'lolem is som', contact: '+66654966' },{ id:'22', title: 'Title 2', location: 'Location 2', tag: 'CN102', datetime: '2024-04-26T23:00', description: 'lolem is som', contact: '+66654966' }];
-  // @property({ type: Array }) postList: any[] = [];
-  // async getPost(): Promise<any[]> {
-  //   try {
-  //     const d = await postDataList(true);
-  //     return d;
-  //   } catch (error) {
-  //     console.error("Error fetching user data:", error);
-  //     return [];
-  //   }
-  // }
-
-
-  // connectedCallback() {
-  //   super.connectedCallback();
-  //   this.getPost().then(data => {
-  //     this.postList = data || [];
-  //   });
-  // }
-
-
+  // @property({ type: Array }) postList: any[] = [{ id:'12', title: 'Title 1', location: 'Location 1', tag: 'CN101', datetime: '2024-04-26T23:00', description: 'lolem is som', contact: '+66654966' },{ id:'22', title: 'Title 2', location: 'Location 2', tag: 'CN102', datetime: '2024-04-26T23:00', description: 'lolem is som', contact: '+66654966' }];
+  @property({ type: Array }) postList: any[] = []
+  @property({ type: String }) uID: string = '';
+  async connectedCallback() {
+    super.connectedCallback();
+    await getData().then(data => {
+      this.uID = data["id"] || "undefined";
+    })
+    this.postList = await ProfilefeedPostList(this.uID);
+  }
   render() {
     return this.mapPostList(this.postList);
   }
@@ -213,31 +218,31 @@ export class MyPostList extends LitElement {
         <div class="flex">
           <img src="/assets/icons/192-192.png" alt="logo" width="100" height="100">
           <span class="content">
-            <h2>${post.title}</h2>
-            <p>${post.location}</p>
-            <p>Tag: #${post.tag}</p>
+            <h2>${post["title"]}</h2>
+            <p>${post["location"]}</p>
+            <p>Tag: #${post["tag"]}</p>
           </span>
         </div class="content">
           <span>
             <h5>หัวข้อ</h5>
-            <h1>${post.title}</h1>
+            <h1>${post["tag"]}</h1>
             <h5>รายละเอียด</h5>
-            <p>${post.description}</p> <br>
+            <p>${post["description"]}</p> <br>
             <div class="oneline">
                 <h5>เวลา:</h5>
-                <p>${post.datetime}</p> <br>
+                <p>${post["datetime"]}</p> <br>
             </div>
             <div class="oneline">
                 <h5>สถานที่:</h5>
-                <p>${post.location}</p> <br>
+                <p>${post["location"]}</p> <br>
             </div>
             <div class="oneline">
                 <h5>วิชา:</h5>
-                <p>${post.tag}</p> <br>
+                <p>${post["tag"]}</p> <br>
             </div>
             <div class="oneline">
                 <h5>ติดต่อ:</h5>
-                <p>${post.contact}</p> <br>
+                <p>${post["contact"]}</p> <br>
             </div>
           </span>
           <span class="end">
@@ -252,6 +257,7 @@ export class MyPostList extends LitElement {
             </div>
 
             <form @submit=${this.save}>
+            <input type="hidden" id="postID" value=${post["id"]}>
             <table>
               <tr>
               <td>
@@ -269,6 +275,7 @@ export class MyPostList extends LitElement {
               <td>
                 <label for="date">วันที่/เวลา</label>
                 <input type="datetime-local" id="date" value="${this.nowdate}" required>
+                <h5 id=error class="error-message"></h5>
               </td>
               </tr>
               <tr>
@@ -317,7 +324,29 @@ export class MyPostList extends LitElement {
     }
   }
 
-  save() {
+  async save(event: Event) {
+    event.preventDefault();
+    const postID = (this.shadowRoot!.getElementById('postID') as HTMLInputElement).value;
+    const topicInput = this.shadowRoot!.getElementById('topic') as HTMLInputElement;
+    const subjectInput = this.shadowRoot!.getElementById('subject') as HTMLInputElement;
+    const detailInput = this.shadowRoot!.getElementById('detail') as HTMLInputElement;
+    const locationInput = this.shadowRoot!.getElementById('location') as HTMLInputElement;
+    const contactInput = this.shadowRoot!.getElementById('contact') as HTMLInputElement;
+    const dateInput = this.shadowRoot!.getElementById('date') as HTMLInputElement;
+
+    // Check if date is in the past
+    const currentDate = new Date();
+    const inputDate = new Date(dateInput.value);
+    const errorElement = this.shadowRoot!.getElementById('error') as HTMLElement;
+    if (inputDate < currentDate) {
+      errorElement.textContent = 'Invalid date. Please choose a future date!';
+      return;
+    } else {
+      errorElement.textContent = '';
+      console.log(postID);
+      await updatePost(postID, topicInput.value, subjectInput.value, detailInput.value, locationInput.value, contactInput.value, dateInput.value);
+      window.location.href = "/profile";
+    }
 
   }
 }

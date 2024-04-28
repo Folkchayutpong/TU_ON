@@ -1,8 +1,21 @@
 import { LitElement, html, css } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
+import { getCollUser, getFileDocByID, ProfilefeedDataList, updateFileData } from '../index';
+
+
+export async function getData(): Promise<any> {
+  try {
+    let d = getCollUser(String(document.cookie));
+    return await d;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    return {};
+  }
+}
 
 @customElement('my-feed')
 export class MyFeedList extends LitElement {
+
 
   static styles = css`
     /* Add your styles here */
@@ -164,10 +177,22 @@ export class MyFeedList extends LitElement {
   `;
 
   //   example feedList data
-  @property({ type: Array }) feedList: any[] = [{ title: 'Title 1', content: 'Content1.pdf', tag: 'CN101' }, { title: 'Title 2', content: 'Content2.pdf', tag: 'CN102' }];
+  // @property({ type: Array }) feedList: any[] = [{ title: 'Title 1', content: 'Content1.pdf', tag: 'CN101' }, { title: 'Title 2', content: 'Content2.pdf', tag: 'CN102' }];
+  @property({ type: Array }) feedList: any[] = [];
+  @property({ type: String }) uID: string = '';
+
+  async connectedCallback() {
+    super.connectedCallback();
+    await getData().then(data => {
+      this.uID = data["id"] || "undefined";
+    })
+    this.feedList = await ProfilefeedDataList(this.uID);
+  }
 
   render() {
     return this.mapFeedList(this.feedList);
+
+
   }
 
   mapFeedList(feedList: any[]) {
@@ -176,9 +201,8 @@ export class MyFeedList extends LitElement {
         <div>
           <img src="/assets/icons/192-192.png" alt="logo" width="100" height="100">
           <span class="content">
-            <h2>${feed.title}</h2>
-            <p>${feed.content}</p>
-            <p>Tag: #${feed.tag}</p>
+            <h2>${feed["title"]}</h2>
+            <p>Tag: #${feed["tag"]}</p>
           </span>
           <span class="download">
             <button class="ebtn" @click="${() => this.toggleModal(index)}">EDIT</button>
@@ -192,6 +216,7 @@ export class MyFeedList extends LitElement {
             </div>
 
             <form @submit=${this.save}>
+            <input type="hidden" id="fileID" value=${feed["fileID"]}>
             <table>
               <tr>
               <td>
@@ -250,7 +275,30 @@ export class MyFeedList extends LitElement {
     }
   }
 
-  save() {
+  async save(event: Event) {
+    event.preventDefault();
+    const fileID = (this.shadowRoot!.getElementById('fileID') as HTMLInputElement).value;
+    const fileRef = await getFileDocByID(fileID);
+    const topicInput = this.shadowRoot!.getElementById('topic') as HTMLInputElement;
+    const subjectInput = this.shadowRoot!.getElementById('subject') as HTMLInputElement;
+    const fileInput = this.shadowRoot!.getElementById('file') as HTMLInputElement;
+    const ismid = this.shadowRoot!.getElementById('mid') as HTMLInputElement;
+    const isfin = this.shadowRoot!.getElementById('fin') as HTMLInputElement;
+
+    var type = ""
+    if (ismid.checked) {
+      type = ismid.value;
+    } else {
+      type = isfin.value;
+    }
+
+    console.log(fileRef)
+    console.log(ismid.value)
+    console.log(this.uID)
+
+    await updateFileData(fileID, topicInput.value, subjectInput.value, type, fileInput.files, this.uID);
+    window.location.href = '/profile';
+
 
   }
 

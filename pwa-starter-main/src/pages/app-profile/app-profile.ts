@@ -1,5 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
+import { resolveRouterPath } from '../../router';
 // import { getCookie, deleteCookie, url } from '../../utils/cookie-utils';
 
 // You can also import styles from another file
@@ -34,6 +35,13 @@ export class AppProfile extends LitElement {
         z-index: 1;
         position: relative;
       }
+      .settings {
+        position: fixed;
+        right: 0;
+        top: 0;
+        padding: 16px;
+        z-index: 2;
+      }
     `
   ]
 
@@ -61,6 +69,11 @@ export class AppProfile extends LitElement {
   render() {
     return html`
       <app-header></app-header>
+      <div class="settings">
+        <a href="${resolveRouterPath('settings')}">
+          <img src="/assets/fa/Set.svg" alt="settings" width="24" height="24">
+        </a>
+      </div>
 
       <main>
 

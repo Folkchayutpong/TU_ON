@@ -7,12 +7,24 @@ export class LogoutComponent extends LitElement {
 
   static styles = css`
     /* Add your styles here */
+    button {
+      background-color: white;
+      border: none;
+      margin: 15px;
+      width: 200px;
+    }
+    img {
+      position: relative;
+      right: 25%;
+    }
   `;
 
   render() {
     return html`
       <form @submit=${this.logout}>
-        <button type="submit">Logout</button>
+        <button type="submit">
+          <img src="/assets/btn/set_func.svg" alt="Logout" />
+        </button>
       </form>
     `;
   }

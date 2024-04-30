@@ -32,6 +32,12 @@ export class PostList extends LitElement {
         margin: 0;
         margin-top: 5px;
     }
+    h2 {
+      height: 1.75rem;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis
+    }
     span.content>p {
         margin-left: 0;
     }
@@ -119,23 +125,28 @@ export class PostList extends LitElement {
   }
 
   render() {
-    return this.mapPostList(this.postList);
+    return html`
+    <search-bar @search=${this.search}></search-bar>
+    ${this.mapPostList(this.postList)}`;
   }
 
   mapPostList(postList: any[]) {
-    if (this.postList.length == 0) {
-      return html`
-          <div>
-            <search-bar @search=${this.search}></search-bar>
-          </div>
-        `;
-    };
+    // if (this.postList.length == 0) {
+    //   return html`
+    //       <div>
+    //         <search-bar @search=${this.search}></search-bar>
+    //       </div>
+    //     `;
+    // };
     return postList.map((post) => {
+      const img = ["Boar", "Cactus", "Pig"];
+      const random = Math.floor(Math.random() * img.length);
+
       return html`
         <div>
         <div class="flex">
-          <img src="/assets/icons/192-192.png" alt="logo" width="100" height="100">
-          <search-bar @search=${this.search}></search-bar>
+          <img src="/assets/icons/${img[random]}.svg" alt="logo" width="100" height="100">
+          <!-- <search-bar @search=${this.search}></search-bar> -->
           <span class="content">
             <h2>${post.title}</h2>
             <p>${post.location}</p>

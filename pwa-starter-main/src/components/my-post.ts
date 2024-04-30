@@ -187,6 +187,12 @@ export class MyPostList extends LitElement {
         padding: 0;
         text-align: center;
       }
+      h2 {
+        height: 1.75rem;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis
+      }
 
       table {
         width: 100%;
@@ -216,7 +222,7 @@ export class MyPostList extends LitElement {
       return html`
         <div>
         <div class="flex">
-          <img src="/assets/icons/192-192.png" alt="logo" width="100" height="100">
+          <img src="/assets/icons/Boar.svg" alt="logo" width="100" height="100">
           <span class="content">
             <h2>${post["title"]}</h2>
             <p>${post["location"]}</p>

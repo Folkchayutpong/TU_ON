@@ -100,21 +100,26 @@ export class FeedList extends LitElement {
   }
 
   render() {
-    return this.mapFeedList(this.feedList);
+    return html`
+    <search-bar @search=${this.search}></search-bar>
+    ${this.mapFeedList(this.feedList)}`;
   }
   mapFeedList(feedList: any[]) {
-    if (this.feedList.length == 0) {
-      return html`
-          <div>
-            <search-bar @search=${this.search}></search-bar>
-          </div>
-        `;
-    };
+    // if (this.feedList.length == 0) {
+    //   return html`
+    //       <div>
+    //         <search-bar @search=${this.search}></search-bar>
+    //       </div>
+    //     `;
+    // };
     return feedList.map((feed) => {
+      const img = ["Boar", "Cactus", "Pig"];
+      const random = Math.floor(Math.random() * img.length);
+
       return html`
           <div>
-            <img src="/assets/icons/192-192.png" alt="logo" width="100" height="100">
-            <search-bar @search=${this.search}></search-bar>
+            <img src="/assets/icons/${img[random]}.svg" alt="logo" width="100" height="100">
+            <!-- <search-bar @search=${this.search}></search-bar> -->
             <span class="content">
               <h2>${feed.title}</h2>
               <p>Tag: #${feed.tag}</p>

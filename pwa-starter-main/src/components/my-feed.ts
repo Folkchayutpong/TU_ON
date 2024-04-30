@@ -199,7 +199,7 @@ export class MyFeedList extends LitElement {
     return feedList.map((feed, index) => {
       return html`
         <div>
-          <img src="/assets/icons/192-192.png" alt="logo" width="100" height="100">
+          <img src="/assets/icons/Boar.svg" alt="logo" width="100" height="100">
           <span class="content">
             <h2>${feed["title"]}</h2>
             <p>Tag: #${feed["tag"]}</p>

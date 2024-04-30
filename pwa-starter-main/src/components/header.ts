@@ -105,7 +105,7 @@ export class AppHeader extends LitElement {
         </div>
 
         <div class="data">
-          <img src="/assets/icons/192-192.png" width="125" height="125">
+          <img src="/assets/icons/Boar.svg" width="125" height="125">
           <div>
             <h1>${this.username}</h1>
             <h2>${this.faculty}</h2>

@@ -1,7 +1,7 @@
 {
   "name": "tu.on",
   "short_name": "tu.on",
-  "start_url": "/index.html",
+  "start_url": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay"],
   "orientation": "portrait",

@@ -41,6 +41,7 @@ npm start
 
 ### 4. Open the App
 - Visit `http://localhost:8000` in your browser to view the app.
+- **Register/Login with your Account!**
 
 ---
 

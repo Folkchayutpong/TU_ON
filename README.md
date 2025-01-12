@@ -1,39 +1,63 @@
-# PWA start development
+# TU_ON - University-Level Educational App
 
-[**Straight to Full Documentation**](https://docs.pwabuilder.com/#/starter/quick-start)
-[https://docs.pwabuilder.com/#/starter/quick-start](https://docs.pwabuilder.com/#/starter/quick-start)
+TU_ON is an application designed to help students search for slides, lesson sets, or summary documents, as well as connect with people to learn together. This app supports features that make learning more convenient and faster.
 
-## Introduction
-This is a starter codebase, just like create-react-app or the Angular CLI can generate, that uses the PWABuilder team's preferred front-end tech stack. We also have a CLI tool to allow you to create a PWA template from the command line.
+---
 
-## Jump Right In
-change directory to the pwa-starter-main folder:
+## Key Features of the App
+
+- **Slide & Notes**: Download slides, lesson sets, or summaries from your university peers.
+- **Tutor**: Find people interested in studying or reading together.
+- **Profile**: Display user profile information along with managing posts you have created.
+- **Schedule**: Display activities you have joined, including scheduled times.
+- **My Post & Edit**: View and edit your own posts.
+- **Settings**: Manage your account, change your password, and toggle Dark Mode.
+
+---
+
+## Installation Guide
+
+### 1. Clone the Project Code
+To get started with the app, you can clone the project code from GitHub using the following command:
+
 ```bash
-cd pwa-starter-main
+git clone https://github.com/Folkchayutpong/TU_ON.git
+cd TU_ON
 ```
 
-Install the PWABuilder CLI:
+### 2. Install Dependencies
+After downloading the project, you need to install the dependencies by running:
+
 ```bash
 npm install
 ```
 
-Preview the app locally:
+### 3. Run the App
+Once the installation is complete, you can start the server and view the app locally:
+
 ```bash
 npm start
 ```
 
-Start server db.json:
-```bash
-json-server --watch db.json --port 3001
-```
-Open the browser on **mobile**
-Add the PWA to your home screen:
-- Open the browser menu
-- Open the https://your-ipaddress:8000
-- Click "Add to Home Screen"
+### 4. Open the App
+- Visit `http://localhost:8000` in your browser to view the app.
 
-Edit url fetch IP address in
-- utils/cookie-utils.ts
-```typescript
-const url = 'http://your-ipaddress:3001';
-```
+---
+
+## Developers
+
+- **Patcharapon Tappakwan**
+- **Chayutpong Phonyiam**
+- **Kawin Sangsivarit**
+- **Wanchart Suparviree**
+- **Kasidit Kornsang**
+
+---
+
+## GitHub Repository
+
+[https://github.com/Folkchayutpong/TU_ON.git](https://github.com/Folkchayutpong/TU_ON.git)
+
+---
+
+**TU_ON** - The app that makes learning with friends easy and convenient!
